@@ -1,83 +1,137 @@
 # MergeMind
 
-**A Switch-powered AI software engineering team.** MergeMind turns a GitHub issue into a coordinated, reviewable engineering workflow using specialized agents that share context through Switch.
+**A Switch-powered AI software engineering team.** MergeMind turns an engineering task into a coordinated workflow across five specialist agents: Coordinator, Planner, Researcher, Implementer, and Reviewer. They communicate through a shared Switch room.
 
 > Flip the Switch Hackathon · Best Business Workflow · 2026  
-> **Status:** implementation in progress. This repository is an early scaffold, not a finished product.
+> **Current state:** implementation in progress; live Switch and model credentials are required for end-to-end verification.
 
-## Why MergeMind
+## What makes it a Switch workflow
 
-Most coding-agent demos are a single prompt followed by a code dump. MergeMind demonstrates a team workflow: a task is planned, research and implementation are delegated, changes are reviewed, and a human approves before anything is applied.
+Switch is the coordination layer, not a decorative chat integration. Each MergeMind role is registered as its own Switch agent. Agents connect to the same room over the official authenticated WebSocket protocol, receive addressed messages, and hand work to the next specialist using Switch's agent operations.
 
-## Planned workflow
+The workflow is:
 
-1. A developer submits a GitHub issue or engineering task.
-2. **Planner** converts it into bounded work items and acceptance criteria.
-3. **Researcher** inspects the repository context and reports relevant files and constraints.
-4. **Implementer** proposes a patch in an isolated workspace.
-5. **Reviewer** evaluates the patch and test results.
-6. A human reviews the proposed changes and explicitly approves or rejects them.
-7. MergeMind records a final summary and workflow trace.
+1. A developer submits an engineering task and public GitHub repository.
+2. The Coordinator delegates to the Planner.
+3. The Planner creates scoped steps and acceptance criteria.
+4. The Researcher reads repository metadata and selected source files.
+5. The Implementer proposes a unified diff; it does not change the repository.
+6. The Reviewer independently inspects the proposal and reports findings.
+7. A human approves or rejects the review in the dashboard.
 
-Switch is intended to be the shared coordination layer—not a decorative integration. Agent-to-agent handoffs and room context will use Switch. The local demo mode is clearly labeled and exists to make the workflow reproducible without credentials.
+The workflow is designed around explicit handoffs and shared room context. It does not silently fall back to local-only messaging when Switch is unavailable.
 
-## Safety boundaries
+## Safety and honesty boundaries
 
-- No automatic merge, deployment, or destructive repository operation.
-- Human approval required before applying a patch.
-- Repository content and issue text are treated as untrusted input.
-- Secrets are read from environment variables and must never be committed.
-- Demo mode must not claim that simulated agents actually ran tools or modified code.
+- No automatic patch application, commit, pull request, merge, deployment, or hackathon submission.
+- Human approval is required before any future repository-changing action.
+- The current approval action records a decision; it does not apply the patch.
+- Repository contents and issue text are untrusted input.
+- The researcher is read-only and currently supports public GitHub repositories.
+- The proposed patch is path-validated and remains an artifact for review.
+- Test execution is not yet implemented. The Reviewer is explicitly told that no test output is available.
+- Switch agent API keys are encrypted in SQLite with a Fernet key stored outside the repository.
+- Registration keys are used for agent creation and are not persisted.
+- The app binds to localhost by default in the documented setup.
 
-## Architecture (planned)
+## Stack
 
-- **API:** Python + FastAPI
-- **Workflow engine:** explicit state machine and typed task/event models
-- **Switch adapter:** bridge/agent protocol integration; see [Switch agent protocol](https://docs.switchagents.ai/switch-rooms/internals/agent-protocol)
-- **Frontend:** React + TypeScript dashboard (next phase)
-- **Execution:** isolated local workspaces; Docker support planned
-- **Tests:** pytest; integration tests will be opt-in
-
-## Repository layout
-
-```
-backend/
-  app/
-    api/          # FastAPI routes
-    core/         # settings and workflow state
-    agents/       # agent roles and registry
-    switch/       # Switch integration boundary
-    models/       # request/response models
-  tests/
-docs/
-```
+- Python 3.11+
+- FastAPI
+- SQLite for local workflow persistence
+- Switch agent protocol (authenticated WebSocket + HTTP operations)
+- OpenAI-compatible model API (default: local Ollama)
+- Plain HTML/CSS/JavaScript dashboard
+- pytest and GitHub Actions
 
 ## Quick start
 
-Requirements: Python 3.11+
+    git clone https://github.com/PSP-YN/MergeMind.git
+    cd MergeMind
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -r backend/requirements.txt
+    python -m backend.app.cli init
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r backend/requirements.txt
-cp .env.example .env
-uvicorn backend.app.main:app --reload
-```
+The init command creates a local .env containing a random admin token and encryption key. It refuses to overwrite an existing .env. Keep that file private.
 
-Open http://127.0.0.1:8000/docs for the API docs and http://127.0.0.1:8000/health for health status.
+Start a local Ollama server and pull the default model:
 
-At this stage, only the API scaffold and workflow model are being built. Switch connectivity, real repository analysis, code execution, frontend, and end-to-end demo will be added and tested in subsequent phases.
+    ollama pull qwen2.5-coder:3b
 
-## Hackathon deliverables checklist
+Then run the app:
 
-- [x] Public repository initialized
-- [ ] Switch integration used as the core coordination mechanism
-- [ ] Multi-agent workflow end-to-end
-- [ ] Interactive UI and working demo
-- [ ] Reproducible setup and tests
-- [ ] Demo video and final README walkthrough
-- [ ] Best Blog entry drafted and reviewed
-- [ ] User review before deployment or submission
+    uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+
+Open http://127.0.0.1:8000. Copy the admin token from .env into the dashboard.
+
+If using another OpenAI-compatible model endpoint, set MERGEMIND_LLM_BASE_URL, MERGEMIND_LLM_API_KEY, and MERGEMIND_LLM_MODEL in .env, then restart the app.
+
+## Connect Switch
+
+1. Run a Switch server and create a registration key in its Gateway.
+2. Find the **agent bridge base URL**. It is not necessarily the Gateway URL.
+3. Create or choose a Switch room.
+4. In the MergeMind dashboard, enter the bridge URL, registration key, and room ID, then register the five agents.
+5. Invite all five MergeMind agents into the selected room in Switch. Each role must be a member before it can connect.
+6. Confirm all five agents show as connected, then submit a task from the dashboard.
+
+See [Switch setup](docs/switch-setup.md) for protocol and troubleshooting details.
+
+## API
+
+- GET /health — public health check
+- GET /api/switch/status — local admin authentication required
+- POST /api/switch/register — register the five Switch agents
+- POST /api/workflows — dispatch a task through the Coordinator
+- GET /api/workflows and GET /api/workflows/{id} — inspect workflow and artifacts
+- POST /api/workflows/{id}/approve — record human approval; does not apply the patch
+- POST /api/workflows/{id}/reject — reject a proposed patch
+
+All dashboard/API routes other than /health require the X-MergeMind-Admin-Token header.
+
+## Project structure
+
+    backend/app/
+      agents/       # LLM provider, repository reader, role prompts, patch validation
+      core/         # settings, SQLite persistence
+      models/       # workflow schemas and statuses
+      static/       # dashboard
+      switch/       # registration, WebSocket client, worker manager
+      workflow_engine.py
+      main.py
+    backend/tests/
+    docs/
+
+## Verification
+
+Run tests locally:
+
+    pytest backend/tests -q
+
+GitHub Actions runs the backend test suite on pushes and pull requests to main.
+
+A passing CI run verifies the automated unit/API tests only. It does not substitute for a live Switch room, real model responses, or an end-to-end demonstration. Those must be verified with the user's Switch server and configured model.
+
+## Hackathon deliverables
+
+- [x] Public GitHub repository
+- [x] Five distinct agent roles and Switch registration flow
+- [x] Official Switch WebSocket/HTTP protocol client implementation
+- [x] Shared-room handoff design
+- [x] Dashboard and persistent workflow records
+- [x] Human review/approval gate
+- [x] Best Blog draft
+- [ ] Live Switch integration verified in a real room
+- [ ] Live multi-agent workflow and model responses verified
+- [ ] Full end-to-end demo and screenshots
+- [ ] Test execution in an isolated sandbox
+- [ ] Final blog evidence and demo video
+- [ ] Final user review and explicit submission approval
+
+## Production deployment note
+
+This build is intended to run locally for the hackathon. It is not yet certified for public multi-user production deployment. Before public exposure, add a production database/migrations, per-user authentication and authorization, rate limiting, managed secret storage, observability, a hardened execution sandbox, and a reviewed deployment configuration. Do not expose the local dashboard directly to the internet.
 
 ## License
 
