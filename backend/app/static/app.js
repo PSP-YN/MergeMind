@@ -91,4 +91,11 @@
     catch(e){notice("globalNotice",e.message,"warn");}
   });
   if(token)unlock();
+  window.setInterval(async()=>{
+    if($("workspace").classList.contains("hidden") || !token)return;
+    try{
+      await Promise.all([loadStatus(),loadWorkflows()]);
+      if(selectedId && !$("detail").classList.contains("hidden"))await showWorkflow(selectedId);
+    }catch(e){setApiState(false,"Connection interrupted");}
+  },8000);
 })();
