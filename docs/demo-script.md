@@ -14,10 +14,10 @@ Show the Switch room with the five registered MergeMind agents. Explain that eac
 In the MergeMind dashboard, enter a concise engineering task and a public GitHub repository. Dispatch it through Switch. Show the Coordinator handing it to the Planner.
 
 ## 1:00–1:35 — Show the agent handoffs
-Show Planner output, Researcher file evidence, Implementer proposed diff, and Reviewer findings. Switch room messages should visibly show the addressed handoffs between agents.
+Show Planner output, Researcher file evidence, Implementer proposed diff, sandbox patch-validation result, and Reviewer findings. Switch room messages should visibly show the addressed handoffs between agents.
 
 ## 1:35–2:05 — Inspect the artifacts
-Return to the dashboard. Open plan, research, patch, and review artifacts. State clearly that the Researcher is read-only and the proposed patch has not been applied. If tests have not been executed, say so.
+Return to the dashboard. Open plan, research, patch, and review artifacts. State clearly that the Researcher is read-only and the proposed patch was applied only to a disposable clone for validation, not to the target repository. Explain that syntax-only checks are not a substitute for the target project's test suite.
 
 ## 2:05–2:30 — Human decision and close
 Show the approve/reject gate. Explain that approval records a human decision but does not silently apply or merge code. Close with the value: specialist agents coordinated through a shared Switch room, with evidence and human oversight.
