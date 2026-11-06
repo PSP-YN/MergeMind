@@ -188,6 +188,8 @@ def approve_workflow(
         raise HTTPException(status_code=404, detail="Workflow not found")
     if workflow.status != WorkflowStatus.AWAITING_APPROVAL:
         raise HTTPException(status_code=409, detail="Workflow is not awaiting human approval.")
+    if not workflow.artifacts.get("patch") or workflow.artifacts.get("patch") == "NO_PATCH":
+        raise HTTPException(status_code=409, detail="There is no valid patch artifact to approve.")
     workflow.approved_by_human = True
     workflow.status = WorkflowStatus.APPROVED
     workflow.updated_at = datetime.now(timezone.utc)
