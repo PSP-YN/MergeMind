@@ -12,7 +12,7 @@ class FakeClient:
         self.posts = []
 
     async def send_targeted(self, role_name, body):
-        self.sent.append((role_name, body))
+        self.sent.append((role_name, f"@{role_name} {body}"))
         return {"event_id": "event-1"}
 
     async def post_message(self, body):
