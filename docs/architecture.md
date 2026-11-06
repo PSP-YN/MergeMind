@@ -1,25 +1,69 @@
-# MergeMind Architecture (Draft)
+# MergeMind Architecture
 
-## Target design
+## Runtime topology
 
-- **Coordinator/API:** accepts work requests, tracks workflow status, enforces transitions and approval gates.
-- **Switch:** shared room context and message delivery between agent participants. The Switch adapter is the boundary between local workflow logic and Switch's agent protocol.
-- **Planner:** acceptance criteria and bounded sub-tasks.
-- **Researcher:** evidence from the source repository (file paths, excerpts, constraints).
-- **Implementer:** proposes changes only in a sandboxed branch/worktree.
-- **Reviewer:** checks correctness, security, scope, and tests independently.
-- **Human approval:** explicit gate before any patch is applied or PR/merge action is triggered.
-- **Frontend:** workflow timeline, agent messages, diff preview, review, approval/rejection.
+    Developer
+       |
+       v
+    MergeMind Dashboard / FastAPI
+       |
+       | task dispatch (Switch operation)
+       v
+    Switch shared room
+       |
+       +--> Coordinator
+       |       |
+       |       +--> Planner
+       |       |       |
+       |       |       +--> Researcher ---- read-only GitHub REST API
+       |       |                 |
+       |       |                 +--> Implementer ---- LLM proposal
+       |       |                           |
+       |       |                           +--> Reviewer ---- LLM review
+       |       |
+       |       +<-------------------------- review handoff
+       |
+       +--> Human sees summary in the room and artifacts in dashboard
 
-## Current implementation status
+## Components
 
-- FastAPI skeleton, role registry, basic workflow API, Switch configuration status, and tests.
-- Workflow data is in-memory and is lost on restart.
-- No real Switch connection, LLM calls, GitHub API calls, repository checkout, or patch execution yet.
-- This draft must be updated as integrations are implemented and verified.
+- **FastAPI:** dashboard API, admin-token guard, health endpoint, workflow lifecycle.
+- **SQLite Store:** durable workflow records, event trace, artifacts, encrypted Switch agent credentials.
+- **Switch registration:** registers five role agents once and updates their addressing policy.
+- **Switch WebSocket client:** persistent connection, connection ID, room claim, ping/pong, cursor tracking, reconnect.
+- **Workflow engine:** role prompts and explicit handoffs. Each specialist receives an addressed Switch message.
+- **Repository reader:** read-only access to public GitHub repository metadata, recursive tree, and selected files.
+- **LLM client:** OpenAI-compatible chat-completions endpoint; default is local Ollama.
+- **Dashboard:** task intake, Switch status, workflow trace, artifacts, approval and rejection.
 
-## Switch integration notes
+## Trust boundaries
 
-The official protocol uses an authenticated WebSocket for room events and HTTP calls for operations. Older SSE clients are deprecated. Credentials are agent API keys (not registration keys) and must remain server-side.
+- Switch registration key: transient credential; never stored.
+- Switch agent API keys: encrypted at rest with Fernet.
+- Admin token: local-only bearer-style header, generated during init and held in .env.
+- Repository content and task descriptions: untrusted input; explicitly treated as data in role prompts.
+- Patch output: validated as a unified diff and checked for path traversal; never applied by the application.
+- LLM provider: receives task text and selected public repository excerpts. Do not send private source code to a hosted provider without authorization.
 
-Reference: [Switch agent protocol](https://docs.switchagents.ai/switch-rooms/internals/agent-protocol)
+## Workflow state
+
+CREATED -> PLANNING -> RESEARCH -> IMPLEMENTATION -> REVIEW -> AWAITING_APPROVAL -> APPROVED or REJECTED.
+
+Any agent-stage exception marks the workflow FAILED and records a bounded error event. Human approval records a decision only. No repository mutation occurs.
+
+## Switch protocol
+
+The current implementation follows the documented WebSocket agent protocol. The client uses one authenticated socket per registered role, claims the configured room on connect, replies to ping frames immediately, and sends operations with X-Switch-Connection-Id. It processes only message events where payload.addressed is true.
+
+References:
+- https://docs.switchagents.ai/switch-rooms/internals/agent-protocol
+- https://docs.switchagents.ai/switch-rooms/internals/agent-connection
+- https://docs.switchagents.ai/switch-rooms/internals/agent-events
+
+## Current limitations
+
+- Public GitHub repositories only; private repository access is not implemented.
+- GitHub source context is limited to selected text files and may be incomplete for large repositories.
+- Patch application and isolated test execution are not implemented.
+- SQLite and a single local admin token suit a local hackathon demo, not a multi-user public service.
+- A live Switch server, room membership, and model endpoint are required for end-to-end validation.
