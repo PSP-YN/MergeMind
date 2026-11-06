@@ -46,6 +46,9 @@ class Store:
             db.execute(
                 "CREATE TABLE IF NOT EXISTS switch_agents (role TEXT PRIMARY KEY, name TEXT NOT NULL, agent_id TEXT NOT NULL, secret TEXT NOT NULL)"
             )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS switch_runtime (role TEXT PRIMARY KEY, connection_id TEXT NOT NULL, cursor INTEGER NOT NULL DEFAULT 0, generation INTEGER)"
+            )
 
     def save_workflow(self, workflow: Workflow) -> None:
         payload = workflow.model_dump_json()
@@ -112,11 +115,33 @@ class Store:
     def get_switch_agent(self, role: str) -> dict[str, str] | None:
         return next((agent for agent in self.get_switch_agents() if agent["role"] == role), None)
 
+    def get_switch_runtime(self, role: str) -> dict | None:
+        with self._connection() as db:
+            row = db.execute(
+                "SELECT connection_id, cursor, generation FROM switch_runtime WHERE role=?", (role,)
+            ).fetchone()
+        if not row:
+            return None
+        return {
+            "connection_id": row["connection_id"],
+            "cursor": int(row["cursor"]),
+            "generation": row["generation"],
+        }
+
+    def save_switch_runtime(self, role: str, connection_id: str, cursor: int, generation: int | None) -> None:
+        with self._connection() as db:
+            db.execute(
+                "INSERT INTO switch_runtime(role, connection_id, cursor, generation) VALUES(?, ?, ?, ?) "
+                "ON CONFLICT(role) DO UPDATE SET connection_id=excluded.connection_id, cursor=excluded.cursor, generation=excluded.generation",
+                (role, connection_id, cursor, generation),
+            )
+
     def delete_all(self) -> None:
         with self._connection() as db:
             db.execute("DELETE FROM workflows")
             db.execute("DELETE FROM settings")
             db.execute("DELETE FROM switch_agents")
+            db.execute("DELETE FROM switch_runtime")
 
 
 store = Store()
