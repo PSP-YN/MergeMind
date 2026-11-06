@@ -5,22 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#11130f">
   <title>MergeMind — Engineering team workspace</title>
-  <style>
-    :root{color-scheme:dark;--bg:#11130f;--panel:#191c17;--panel2:#20251e;--line:#30372d;--text:#f0f2e9;--muted:#a2aa9b;--amber:#f0b84b;--green:#9bd18b;--red:#ef8b7e;--radius:16px;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    *{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -15%,#30331f 0%,transparent 60%),var(--bg);color:var(--text);min-height:100vh}
-    button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:650;background:var(--amber);color:#201a0c}button.secondary{background:#2b3228;color:var(--text);border:1px solid var(--line)}button.danger{background:#4a2925;color:#ffd7d1;border:1px solid #71423b}button:disabled{opacity:.45;cursor:not-allowed}
-    .shell{max-width:1240px;margin:0 auto;padding:30px 24px 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;border-radius:13px;background:var(--amber);color:#241c0b;display:grid;place-items:center;font-size:20px;font-weight:900}.brand h1{font-size:19px;margin:0;letter-spacing:-.4px}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}.tag{border:1px solid var(--line);padding:7px 11px;border-radius:999px;color:var(--muted);font-size:12px}
-    .hero{padding:26px 28px;background:linear-gradient(120deg,#272c20,#191c17 65%);border:1px solid var(--line);border-radius:22px;margin-bottom:18px}.eyebrow{color:var(--amber);font-size:11px;text-transform:uppercase;letter-spacing:1.6px;font-weight:800}.hero h2{font-size:clamp(25px,4vw,38px);letter-spacing:-1.2px;margin:9px 0}.hero p{max-width:760px;color:var(--muted);line-height:1.6;margin:0}
-    .grid{display:grid;grid-template-columns: minmax(0,1.15fr) minmax(310px,.85fr);gap:18px}.panel{background:rgba(25,28,23,.96);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:18px}.panel h3{font-size:15px;margin:0 0 15px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.panel-head h3{margin:0}
-    label{display:block;font-size:12px;color:var(--muted);margin:12px 0 6px}input,textarea{width:100%;border:1px solid var(--line);background:#11140f;color:var(--text);border-radius:10px;padding:11px 12px;outline:none}input:focus,textarea:focus{border-color:var(--amber)}textarea{min-height:100px;resize:vertical;line-height:1.5}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.hint{font-size:11px;color:var(--muted);line-height:1.5;margin:9px 0 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-    .statusline{display:flex;gap:9px;align-items:center;color:var(--muted);font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:#747b6c}.dot.ok{background:var(--green);box-shadow:0 0 0 4px #9bd18b1a}.dot.warn{background:var(--amber)}.agent-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.agent{background:var(--panel2);border:1px solid var(--line);padding:11px;border-radius:11px}.agent strong{display:block;font-size:12px}.agent small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
-    .workflow{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);margin-top:10px;cursor:pointer}.workflow:hover{border-color:#6d6848}.workflow strong{font-size:13px}.workflow p{font-size:11px;color:var(--muted);margin:6px 0 0;line-height:1.5}.meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}.pill{font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:5px 8px;border-radius:999px;background:#30372d;color:#d3dacb}.pill.good{background:#233b28;color:#b8e2ad}.pill.warn{background:#493a1e;color:#f6d48a}.pill.bad{background:#4a2925;color:#ffb9ae}
-    .empty{color:var(--muted);font-size:12px;text-align:center;padding:28px 12px;border:1px dashed var(--line);border-radius:12px}.hidden{display:none!important}.notice{font-size:12px;color:var(--muted);line-height:1.55;padding:12px 13px;border-radius:10px;background:#20251e;border:1px solid var(--line);margin-top:12px}.notice strong{color:var(--text)}.notice.warn{border-color:#66512b}.notice.good{border-color:#3d5a38}
-    #detail{margin-top:18px}.timeline{display:grid;gap:9px}.event{border-left:2px solid #68704e;padding:4px 0 5px 12px}.event strong{font-size:12px}.event p{font-size:12px;color:var(--muted);margin:4px 0}.event time{font-size:10px;color:#778071}
-    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 10px}.tabs button{padding:7px 10px;font-size:11px}.artifact{white-space:pre-wrap;overflow-wrap:anywhere;background:#10130f;border:1px solid var(--line);border-radius:10px;padding:14px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:520px;overflow:auto;color:#d9dfd2}.footer{color:#747d70;font-size:11px;text-align:center;margin-top:26px}
-    @media(max-width:850px){.grid{grid-template-columns:1fr}.top{align-items:flex-start}.shell{padding:18px 14px 50px}.hero{padding:22px}.agent-list{grid-template-columns:1fr 1fr}}
-    @media(max-width:480px){.row{flex-direction:column}.agent-list{grid-template-columns:1fr}.tag{display:none}}
-  </style>
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <div class="shell">
@@ -90,105 +75,11 @@
       <div class="actions"><button id="approve" class="hidden">Approve review</button><button id="reject" class="danger hidden">Reject proposal</button></div>
       <div class="tabs" id="artifactTabs"></div>
       <pre id="artifact" class="artifact">Select an artifact to inspect it.</pre>
-      <h3 style="margin-top:22px">Activity trace</h3><div id="timeline" class="timeline"></div>
+      <h3 class="section-title">Activity trace</h3><div id="timeline" class="timeline"></div>
     </section>
   </div>
   <div class="footer">MergeMind · Human approval required · Proposed changes are never applied automatically</div>
 </div>
-<script>
-(() => {
-  const $ = id => document.getElementById(id);
-  let token = localStorage.getItem("mergemind_admin_token") || "";
-  let selectedId = null;
-  let selectedArtifact = "plan";
-  const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const headers = () => ({ "Content-Type":"application/json", "X-MergeMind-Admin-Token":token });
-  function notice(id, message, kind="") { const el=$(id); el.textContent=message; el.className="notice "+kind; el.classList.remove("hidden"); }
-  function hide(id){$(id).classList.add("hidden");}
-  async function api(path, options={}) {
-    const response = await fetch(path,{...options,headers:{...headers(),...(options.headers||{})}});
-    const data = await response.json().catch(()=>({detail:response.statusText}));
-    if(!response.ok) throw new Error(data.detail || "Request failed");
-    return data;
-  }
-  function setApiState(ok,text){$("apiState").innerHTML='<span class="dot '+(ok?'ok':'')+'"></span><span>'+esc(text)+'</span>';}
-  async function unlock(){
-    token=$("adminToken").value.trim();
-    if(!token){notice("globalNotice","Enter the local admin token.");return;}
-    localStorage.setItem("mergemind_admin_token",token);
-    try{
-      await api("/api/switch/status");
-      $("workspace").classList.remove("hidden");hide("globalNotice");setApiState(true,"Workspace unlocked");
-      await Promise.all([loadStatus(),loadWorkflows()]);
-    }catch(e){localStorage.removeItem("mergemind_admin_token");token="";setApiState(false,"Access denied");notice("globalNotice",e.message,"warn");}
-  }
-  async function loadStatus(){
-    const s=await api("/api/switch/status");
-    const connected=Object.values(s.agents||{}).filter(a=>a.connected).length;
-    $("switchState").innerHTML='<span class="dot '+(connected===5?'ok':'warn')+'"></span><span>'+connected+'/5 agents connected</span>';
-    $("agentCount").textContent=(s.registered_agents||[]).length+" registered";
-    $("agentList").innerHTML=(s.registered_agents||[]).map(a=>{
-      const live=s.agents?.[a.role]?.connected;
-      return '<div class="agent"><strong>'+esc(a.name)+'</strong><small><span class="dot '+(live?'ok':'')+'" style="display:inline-block;vertical-align:middle"></span> '+(live?'Connected':'Registered · waiting for room access')+'</small></div>';
-    }).join("") || '<div class="empty">No Switch agents registered yet.</div>';
-    if(s.base_url)$("switchUrl").value=s.base_url;
-    if(s.room_id)$("roomId").value=s.room_id;
-  }
-  async function loadWorkflows(){
-    const list=await api("/api/workflows");
-    $("workflowCount").textContent=list.length+" workflows";
-    $("workflowList").innerHTML=list.length?list.map(w=>'<div class="workflow" data-id="'+esc(w.id)+'"><strong>'+esc(w.title)+'</strong><p>'+esc(w.repository)+'</p><div class="meta"><span class="pill '+(w.status==="awaiting_approval"?"warn":w.status==="failed"||w.status==="rejected"?"bad":w.status==="approved"?"good":"")+'">'+esc(w.status.replaceAll("_"," "))+'</span><span class="hint">'+new Date(w.updated_at).toLocaleString()+'</span></div></div>').join(""):'<div class="empty">No workflows yet. Start with a real public GitHub issue or task.</div>';
-    document.querySelectorAll(".workflow").forEach(el=>el.addEventListener("click",()=>showWorkflow(el.dataset.id)));
-  }
-  async function showWorkflow(id){
-    selectedId=id; const w=await api("/api/workflows/"+encodeURIComponent(id));
-    $("detail").classList.remove("hidden");$("detailTitle").textContent=w.title;$("detailStatus").textContent=w.status.replaceAll("_"," ");
-    $("detailRepo").textContent=w.repository;$("detailId").textContent=w.id;
-    $("approve").classList.toggle("hidden",w.status!=="awaiting_approval");
-    $("reject").classList.toggle("hidden",w.status!=="awaiting_approval");
-    const keys=["plan","research","patch","review"].filter(k=>w.artifacts?.[k]);
-    $("artifactTabs").innerHTML=keys.map(k=>'<button class="'+(k===selectedArtifact?'':'secondary')+'" data-artifact="'+k+'">'+k+'</button>').join("");
-    if(!keys.includes(selectedArtifact))selectedArtifact=keys[0]||"";
-    document.querySelectorAll("[data-artifact]").forEach(el=>el.addEventListener("click",()=>{selectedArtifact=el.dataset.artifact;showWorkflow(id);}));
-    $("artifact").textContent=selectedArtifact?(w.artifacts[selectedArtifact]||""):"No agent artifacts have arrived yet.";
-    $("timeline").innerHTML=(w.events||[]).map(e=>'<div class="event"><strong>'+esc(e.actor)+' · '+esc(e.kind.replaceAll("_"," "))+'</strong><p>'+esc(e.message)+'</p><time>'+new Date(e.timestamp).toLocaleString()+'</time></div>').join("")||'<div class="empty">No activity yet.</div>';
-  }
-  $("saveToken").addEventListener("click",unlock);
-  $("adminToken").value=token;
-  $("adminToken").addEventListener("keydown",e=>{if(e.key==="Enter")unlock();});
-  $("refresh").addEventListener("click",async()=>{try{await Promise.all([loadStatus(),loadWorkflows()]);}catch(e){notice("globalNotice",e.message,"warn");}});
-  $("registerSwitch").addEventListener("click",async()=>{
-    const button=$("registerSwitch");button.disabled=true;button.textContent="Registering…";
-    try{
-      const result=await api("/api/switch/register",{method:"POST",body:JSON.stringify({base_url:$("switchUrl").value.trim(),registration_key:$("registrationKey").value,room_id:$("roomId").value.trim()})});
-      $("registrationKey").value="";notice("switchNotice",result.registered_roles.length+" agents registered. "+result.next_step,"good");
-      await new Promise(r=>setTimeout(r,1200));await loadStatus();
-    }catch(e){notice("switchNotice",e.message,"warn");}
-    finally{button.disabled=false;button.textContent="Register five agents";}
-  });
-  $("startTask").addEventListener("click",async()=>{
-    const button=$("startTask");button.disabled=true;button.textContent="Dispatching…";
-    try{
-      const w=await api("/api/workflows",{method:"POST",body:JSON.stringify({title:$("taskTitle").value.trim(),description:$("taskDescription").value.trim(),repository:$("repoUrl").value.trim(),mode:"switch"})});
-      $("taskTitle").value="";$("taskDescription").value="";notice("globalNotice","Workflow created and dispatched to the Switch coordinator.","good");
-      await loadWorkflows();await showWorkflow(w.id);
-    }catch(e){notice("globalNotice",e.message,"warn");}
-    finally{button.disabled=false;button.textContent="Dispatch through Switch";}
-  });
-  $("approve").addEventListener("click",async()=>{
-    if(!selectedId)return;
-    if(!confirm("Record approval of this review? This does not apply, commit, merge, deploy, or submit the patch."))return;
-    try{await api("/api/workflows/"+selectedId+"/approve",{method:"POST"});await showWorkflow(selectedId);await loadWorkflows();}
-    catch(e){notice("globalNotice",e.message,"warn");}
-  });
-  $("reject").addEventListener("click",async()=>{
-    if(!selectedId)return;
-    if(!confirm("Reject this proposed patch? No repository changes will be made."))return;
-    try{await api("/api/workflows/"+selectedId+"/reject",{method:"POST"});await showWorkflow(selectedId);await loadWorkflows();}
-    catch(e){notice("globalNotice",e.message,"warn");}
-  });
-  if(token)unlock();
-})();
-</script>
+  <script src="/static/app.js" defer></script>
 </body>
 </html>
