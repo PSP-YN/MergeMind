@@ -32,7 +32,7 @@
 - **Switch registration:** registers five role agents once and updates their addressing policy.
 - **Switch WebSocket client:** persistent connection, connection ID, room claim, ping/pong, ordered event queue, cursor acknowledgement after processing, and cursor/generation persistence across app restarts.
 - **Workflow engine:** role prompts and explicit handoffs. Each specialist receives an addressed Switch message.
-- **Repository reader:** read-only access to public GitHub repository metadata, recursive tree, and selected files.
+- **Repository reader:** read-only access to public GitHub repository metadata, recursive tree, and selected files.\n- **Patch sandbox:** clones the public repository into a temporary directory, applies the proposal there, checks the diff, and optionally runs Python syntax compilation in a no-network, read-only Docker container. It never executes repository tests or arbitrary project commands.
 - **LLM client:** OpenAI-compatible chat-completions endpoint; default is local Ollama.
 - **Dashboard:** task intake, Switch status, workflow trace, artifacts, approval and rejection.
 
@@ -64,6 +64,6 @@ References:
 
 - Public GitHub repositories only; private repository access is not implemented.
 - GitHub source context is limited to selected text files and may be incomplete for large repositories.
-- Patch application and isolated test execution are not implemented.
+- Patch application to a disposable clone and syntax-only Docker checks are implemented; isolated execution of the repository test suite is not.
 - SQLite and a single local admin token suit a local hackathon demo, not a multi-user public service.
 - A live Switch server, room membership, and model endpoint are required for end-to-end validation.
