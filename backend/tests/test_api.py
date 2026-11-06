@@ -1,9 +1,8 @@
 from fastapi.testclient import TestClient
 
-from backend.app.core import store as store_module
 from backend.app.core.store import store
 from backend.app.main import app
-from backend.app.models.workflow import Workflow, WorkflowEvent, WorkflowStatus
+from backend.app.models.workflow import Workflow, WorkflowStatus
 from backend.app.switch.client import websocket_url
 from backend.app.agents.patch_safety import UnsafePatch, validate_unified_diff
 from backend.app.agents.repository import RepositoryError, parse_repository_url
