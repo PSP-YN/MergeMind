@@ -48,7 +48,7 @@
     selectedId=id; const w=await api("/api/workflows/"+encodeURIComponent(id));
     $("detail").classList.remove("hidden");$("detailTitle").textContent=w.title;$("detailStatus").textContent=w.status.replaceAll("_"," ");
     $("detailRepo").textContent=w.repository;$("detailId").textContent=w.id;
-    $("approve").classList.toggle("hidden",w.status!=="awaiting_approval");
+    $("approve").classList.toggle("hidden",w.status!=="awaiting_approval" || !w.artifacts?.patch || w.artifacts.patch==="NO_PATCH");
     $("reject").classList.toggle("hidden",w.status!=="awaiting_approval");
     const keys=["plan","research","patch","review"].filter(k=>w.artifacts?.[k]);
     $("artifactTabs").innerHTML=keys.map(k=>'<button class="'+(k===selectedArtifact?'':'secondary')+'" data-artifact="'+k+'">'+k+'</button>').join("");
