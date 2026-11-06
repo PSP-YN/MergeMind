@@ -47,6 +47,7 @@ class SwitchAgentClient:
         self.ready = asyncio.Event()
         self.stopped = asyncio.Event()
         self._handler_lock = asyncio.Semaphore(1)
+        self._handler_tasks: set[asyncio.Task] = set()
         self._first_connect = True
 
     async def operation(self, name: str, arguments: dict) -> dict:
@@ -104,8 +105,19 @@ class SwitchAgentClient:
         payload = data.get("payload") or {}
         if payload.get("addressed") is not True:
             return
+        task = asyncio.create_task(self._run_handler(payload))
+        self._handler_tasks.add(task)
+        task.add_done_callback(self._handler_tasks.discard)
+
+    async def _run_handler(self, payload: dict) -> None:
+        # Keep the socket reader free to answer Switch pings while an LLM call runs.
         async with self._handler_lock:
-            await self.handler(payload, self)
+            try:
+                await self.handler(payload, self)
+            except asyncio.CancelledError:
+                raise
+            except Exception:
+                logger.exception("Message handler failed for Switch agent %s", self.agent_id)
 
     async def run_forever(self) -> None:
         while not self.stopped.is_set():
@@ -162,3 +174,8 @@ class SwitchAgentClient:
     async def stop(self) -> None:
         self.stopped.set()
         self.ready.clear()
+        for task in list(self._handler_tasks):
+            task.cancel()
+        if self._handler_tasks:
+            await asyncio.gather(*self._handler_tasks, return_exceptions=True)
+        self._handler_tasks.clear()
