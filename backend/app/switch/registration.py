@@ -13,8 +13,15 @@ class SwitchRegistrationError(RuntimeError):
 async def register_mergemind_agents(base_url: str, registration_key: str, room_id: str) -> dict:
     base_url = base_url.rstrip("/")
     parsed = urlparse(base_url)
-    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
-        raise SwitchRegistrationError("Switch server URL must use HTTP or HTTPS")
+    if (
+        parsed.scheme not in {"http", "https"}
+        or not parsed.netloc
+        or parsed.username
+        or parsed.password
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise SwitchRegistrationError("Switch server URL must be a clean HTTP(S) URL without credentials or query parameters")
     if not room_id.strip():
         raise SwitchRegistrationError("Switch room ID is required")
     existing_base = store.get_setting("switch_base_url")
