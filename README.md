@@ -5,7 +5,7 @@
 **A Switch-powered AI software engineering team.** MergeMind turns an engineering task into a coordinated workflow across five specialist agents: Coordinator, Planner, Researcher, Implementer, and Reviewer. They communicate through a shared Switch room.
 
 > Flip the Switch Hackathon · Best Business Workflow · 2026  
-> **Current state:** implementation in progress; live Switch and model credentials are required for end-to-end verification.
+> **Current state:** core implementation and automated checks are in place; live Switch room and model validation remain.
 
 ## What makes it a Switch workflow
 
