@@ -1,6 +1,7 @@
-import asyncio
+import json
 import secrets
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -141,7 +142,7 @@ async def create_workflow(
         )
     )
     store.save_workflow(workflow)
-    handoff = "MERGEMIND/1\n" + __import__("json").dumps({
+    handoff = "MERGEMIND/1\n" + json.dumps({
         "stage": "task",
         "workflow_id": workflow.id,
         "title": workflow.title,
@@ -185,7 +186,7 @@ def approve_workflow(
         raise HTTPException(status_code=409, detail="Workflow is not awaiting human approval.")
     workflow.approved_by_human = True
     workflow.status = WorkflowStatus.APPROVED
-    workflow.updated_at = WorkflowEvent(actor="human", kind="approval", message="Human review approval recorded. MergeMind does not apply or merge the patch automatically.").timestamp
+    workflow.updated_at = datetime.now(timezone.utc)
     workflow.events.append(
         WorkflowEvent(
             actor="human",
@@ -208,7 +209,7 @@ def reject_workflow(
     if workflow.status != WorkflowStatus.AWAITING_APPROVAL:
         raise HTTPException(status_code=409, detail="Workflow is not awaiting human review.")
     workflow.status = WorkflowStatus.REJECTED
-    workflow.updated_at = WorkflowEvent(actor="human", kind="rejection", message="Human reviewer rejected the proposal.").timestamp
+    workflow.updated_at = datetime.now(timezone.utc)
     workflow.events.append(
         WorkflowEvent(
             actor="human",
