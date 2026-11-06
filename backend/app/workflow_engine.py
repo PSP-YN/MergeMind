@@ -39,10 +39,17 @@ def _handoff(stage: str, workflow: Workflow, **data) -> str:
 
 
 def _parse_handoff(body: str) -> dict | None:
-    if not body.startswith(HANDOFF_PREFIX):
+    # Switch's send_targeted_message prepends @agent-name to the body.
+    # Accept only those mention tokens before our versioned handoff envelope.
+    body = body.strip()
+    marker = body.find(HANDOFF_PREFIX)
+    if marker < 0:
+        return None
+    leading = body[:marker].strip()
+    if leading and not re.fullmatch(r"(?:@[A-Za-z0-9_.-]+[,\\s:]*)+", leading):
         return None
     try:
-        value = json.loads(body[len(HANDOFF_PREFIX):])
+        value = json.loads(body[marker + len(HANDOFF_PREFIX):])
         return value if isinstance(value, dict) else None
     except json.JSONDecodeError:
         return None
