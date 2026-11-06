@@ -145,3 +145,14 @@ def test_switch_agent_api_keys_are_encrypted_at_rest():
     with store._connection() as db:
         row = db.execute("SELECT secret FROM switch_agents WHERE role='planner'").fetchone()
     assert "sensitive-agent-api-key" not in row["secret"]
+
+
+
+def test_dashboard_assets_are_local_and_security_policy_is_strict():
+    page = client.get("/")
+    script = client.get("/static/app.js")
+    stylesheet = client.get("/static/styles.css")
+    assert script.status_code == 200
+    assert stylesheet.status_code == 200
+    assert "unsafe-inline" not in page.headers.get("content-security-policy", "")
+    assert "X-Frame-Options" in page.headers
