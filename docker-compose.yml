@@ -10,7 +10,7 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
-      - ./data:/app/data
+      - mergemind-data:/app/data
     extra_hosts:
       - "host.docker.internal:host-gateway"
     read_only: true
@@ -30,3 +30,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+
+volumes:
+  mergemind-data:
