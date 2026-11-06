@@ -22,7 +22,7 @@ Local, single-user hackathon demonstration. The documented run command binds to 
 - No multi-user identity, workspace isolation, or per-user authorization.
 - SQLite has no schema migration framework or managed backup strategy.
 - No request rate limiting, audit export, metrics, tracing, or alerting.
-- No isolated execution sandbox for target repository tests.
+- A disposable-clone patch and syntax-check sandbox exists, but the target repository's test suite is not executed. A hardened test-execution policy is still required.
 - No private GitHub repository access or fine-grained GitHub App integration.
 - No secrets rotation/recovery UI.
 - No live Switch environment has been exercised in this development session.
