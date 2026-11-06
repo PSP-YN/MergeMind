@@ -23,6 +23,21 @@ The workflow is:
 
 The workflow is designed around explicit handoffs and shared room context. It does not silently fall back to local-only messaging when Switch is unavailable.
 
+## Business workflow and decision control
+
+MergeMind turns an engineering request into a decision-ready work package. It is designed for a team that needs to know who owns each step, what evidence supports the proposed change, and who made the final decision.
+
+| Stage | Owner | Persisted output | Control |
+|---|---|---|---|
+| Intake | Coordinator | Task record and delegated work | One accountable workflow owner |
+| Scope | Planner | Steps, assumptions, risks, acceptance criteria | Scope is explicit before implementation |
+| Evidence | Researcher | Repository paths and source excerpts | Claims are tied to the actual codebase |
+| Proposal | Implementer | Unified diff and validation result | The target repository is not modified |
+| Quality gate | Reviewer | Independent findings and missing-test notes | The implementer does not approve its own work |
+| Decision | Human | Approval or rejection record | A person remains accountable |
+
+The workflow's business outcome is traceability: a request can be followed from intake through evidence, proposal, review, and decision. It is not an autonomous merge pipeline. Approval records the decision; it does not apply the patch.
+
 ## Safety and honesty boundaries
 
 - No patch is applied to the target repository; no commit, pull request, merge, deployment, or hackathon submission is created.
@@ -117,6 +132,7 @@ Run tests locally:
     pytest backend/tests -q
 
 GitHub Actions runs the backend test suite on pushes and pull requests to main. The latest verified CI run passed 26 tests and successfully built and smoke-tested the Docker image. The suite includes API/security checks, Switch cursor/queue checks, and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
+See [run #98](https://github.com/PSP-YN/MergeMind/actions/runs/42162575248) for the 26-test pass, Docker image build, and container health smoke test.
 
 A passing CI run verifies the automated unit/API tests only. It does not substitute for a live Switch room, real model responses, or an end-to-end demonstration. Those must be verified with the user's Switch server and configured model.
 
@@ -124,7 +140,7 @@ A passing CI run verifies the automated unit/API tests only. It does not substit
 
 - [Submission description](docs/submission.md)
 - [Demo recording script](docs/demo-script.md)
-- [Best Blog entry draft](docs/blog-entry.md)
+- [Best Blog article](docs/blog-entry.md)
 - [Production readiness review](docs/production-readiness.md)
 - [Remaining owner setup steps](docs/remaining-user-steps.md)
 
@@ -136,12 +152,13 @@ A passing CI run verifies the automated unit/API tests only. It does not substit
 - [x] Shared-room handoff design
 - [x] Dashboard and persistent workflow records
 - [x] Human review/approval gate
-- [x] Best Blog draft
+- [x] Publication-ready Best Blog article
 - [ ] Live Switch integration verified in a real room
 - [ ] Live multi-agent workflow and model responses verified
 - [ ] Full end-to-end demo and screenshots
-- [x] Disposable patch-application and Python syntax-check sandbox\n- [ ] Target repository test-suite execution in an isolated sandbox
-- [ ] Final blog evidence and demo video
+- [x] Disposable patch-application and Python syntax-check sandbox
+- [ ] Target repository test-suite execution in an isolated sandbox
+- [ ] Live Switch demonstration, demo video, and external publication link
 - [ ] Final user review and explicit submission approval
 
 ## Production deployment note
