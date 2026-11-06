@@ -31,7 +31,7 @@ The workflow is designed around explicit handoffs and shared room context. It do
 - Repository contents and issue text are untrusted input.
 - The researcher is read-only and currently supports public GitHub repositories.
 - The proposed patch is path-validated and remains an artifact for review.
-- Test execution is not yet implemented. The Reviewer is explicitly told that no test output is available.
+- Proposed diffs are applied only to a disposable clone for applicability checks; Python syntax compilation can run in a no-network Docker container with a read-only source mount. The project test suite is not executed.
 - Switch agent API keys are encrypted in SQLite with a Fernet key stored outside the repository.
 - Registration keys are used for agent creation and are not persisted.
 - The app binds to localhost by default in the documented setup.
@@ -140,7 +140,7 @@ A passing CI run verifies the automated unit/API tests only. It does not substit
 - [ ] Live Switch integration verified in a real room
 - [ ] Live multi-agent workflow and model responses verified
 - [ ] Full end-to-end demo and screenshots
-- [ ] Test execution in an isolated sandbox
+- [x] Disposable patch-application and Python syntax-check sandbox\n- [ ] Target repository test-suite execution in an isolated sandbox
 - [ ] Final blog evidence and demo video
 - [ ] Final user review and explicit submission approval
 
