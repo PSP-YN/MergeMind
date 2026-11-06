@@ -17,6 +17,11 @@ async def register_mergemind_agents(base_url: str, registration_key: str, room_i
         raise SwitchRegistrationError("Switch server URL must use HTTP or HTTPS")
     if not room_id.strip():
         raise SwitchRegistrationError("Switch room ID is required")
+    existing_base = store.get_setting("switch_base_url")
+    if existing_base and existing_base != base_url and store.get_switch_agents():
+        raise SwitchRegistrationError(
+            "MergeMind already has agent credentials for a different Switch server. Do not reuse those keys on a new server; reset the local agent store before registering a different server."
+        )
 
     async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
         try:
@@ -44,6 +49,7 @@ async def register_mergemind_agents(base_url: str, registration_key: str, room_i
                     "metadata": {"application": "MergeMind", "role": role.id},
                     "overwrite": False,
                 }
+                response = None
                 try:
                     response = await client.post(
                         f"{base_url}/agents",
@@ -62,7 +68,7 @@ async def register_mergemind_agents(base_url: str, registration_key: str, room_i
                     store.save_switch_agent(role.id, role.switch_name, result["id"], result["api_key"])
                     created.append(role.id)
                 except (httpx.HTTPError, KeyError, ValueError) as exc:
-                    detail = response.text[:500] if "response" in locals() else str(exc)
+                    detail = response.text[:500] if response is not None else str(exc)
                     raise SwitchRegistrationError(
                         f"Could not register {role.name}. Existing agents are retained; correct the cause and retry. {detail}"
                     ) from exc
