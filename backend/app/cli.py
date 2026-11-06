@@ -21,7 +21,8 @@ def initialise() -> None:
         "MERGEMIND_LLM_MODEL=qwen2.5-coder:3b\n",
         encoding="utf-8",
     )
-    print("Created .env with a random admin token and encryption key.")
+    env_path.chmod(0o600)
+    print("Created private .env with a random admin token and encryption key.")
     print("Keep .env private. Start the app with: uvicorn backend.app.main:app --host 127.0.0.1 --port 8000")
 
 
