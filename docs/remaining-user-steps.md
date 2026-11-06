@@ -63,6 +63,12 @@ The automated test suite does not replace this live integration run. If any agen
 
 ## 6. Final recording and approval
 
-Record the demo using docs/demo-script.md. Replace draft-only claims in docs/blog-entry.md and docs/submission.md with evidence from the actual run.
+Record the demo using docs/demo-script.md. Update the verification sections in docs/blog-entry.md and docs/submission.md with evidence from the actual run.
 
 Do not deploy or submit until the owner has reviewed the final build, blog, demo, and submission materials and explicitly approved those actions.
+
+## 7. External blog and LinkedIn publication
+
+The polished article is public in the repository at [docs/blog-entry.md](https://github.com/PSP-YN/MergeMind/blob/main/docs/blog-entry.md). It has not yet been published to an external blog platform. Choose the destination (for example, an existing WordPress site or the personal portfolio) and connect the publishing account before posting.
+
+The LinkedIn announcement should link to the final published article and describe only verified results. No external blog post or LinkedIn post has been published from this session yet.
