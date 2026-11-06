@@ -12,6 +12,7 @@ from backend.app.agents.prompts import (
     REVIEWER_SYSTEM,
 )
 from backend.app.agents.repository import read_repository_context
+from backend.app.agents.sandbox import verify_patch_in_sandbox
 from backend.app.core.store import store
 from backend.app.models.workflow import Workflow, WorkflowEvent, WorkflowStatus
 
@@ -147,17 +148,21 @@ async def handle_agent_message(role: str, event: dict, client) -> None:
                 temperature=0.1,
             )
             patch = validate_unified_diff(raw_patch)
+            sandbox_result = await verify_patch_in_sandbox(workflow.repository, patch)
             workflow = _update(workflow.id, status=WorkflowStatus.REVIEW,
                                artifact=("patch", patch), actor="Implementer",
                                message=("Generated a proposed unified diff; no repository files were changed."
                                         if patch != "NO_PATCH" else "Could not safely generate a patch from the available context."))
+            workflow = _update(workflow.id, artifact=("sandbox", sandbox_result), actor="Sandbox",
+                               kind="patch_validation",
+                               message="Checked patch applicability and performed restricted syntax validation where Docker was available.")
             await _send(client, "reviewer", workflow, "review", plan=handoff.get("plan", ""),
-                        research=handoff.get("research", ""), patch=patch)
+                        research=handoff.get("research", ""), patch=patch, sandbox=sandbox_result)
         elif role == "reviewer":
             patch = str(handoff.get("patch", "NO_PATCH"))
             result = await llm.complete(
                 REVIEWER_SYSTEM,
-                f"Task: {workflow.title}\n\n{workflow.description}\n\nPlan:\n{handoff.get('plan','')}\n\nResearch:\n{handoff.get('research','')}\n\nProposed patch:\n{patch}\n\nNo test execution output is available. Explicitly state tests were not run.",
+                f"Task: {workflow.title}\n\n{workflow.description}\n\nPlan:\n{handoff.get('plan','')}\n\nResearch:\n{handoff.get('research','')}\n\nProposed patch:\n{patch}\n\nPatch validation sandbox:\n{handoff.get('sandbox','Not run')}\n\nThe sandbox only applies the patch to a disposable clone and performs git diff --check plus Python syntax compilation in a no-network Docker container. No project test suite was executed. State this distinction explicitly.",
             )
             workflow = _update(workflow.id, status=WorkflowStatus.AWAITING_APPROVAL,
                                artifact=("review", result), actor="Reviewer",
