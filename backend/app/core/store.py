@@ -1,7 +1,8 @@
 import json
 import sqlite3
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Iterator
 
 from backend.app.core.config import settings
 from backend.app.models.workflow import Workflow, WorkflowEvent
@@ -21,8 +22,20 @@ class Store:
         connection.execute("PRAGMA foreign_keys = ON")
         return connection
 
+    @contextmanager
+    def _connection(self) -> Iterator[sqlite3.Connection]:
+        db = self._connect()
+        try:
+            yield db
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            db.close()
+
     def _initialise(self) -> None:
-        with self._connect() as db:
+        with self._connection() as db:
             db.execute("PRAGMA journal_mode = WAL")
             db.execute(
                 "CREATE TABLE IF NOT EXISTS workflows (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, payload TEXT NOT NULL)"
@@ -36,7 +49,7 @@ class Store:
 
     def save_workflow(self, workflow: Workflow) -> None:
         payload = workflow.model_dump_json()
-        with self._connect() as db:
+        with self._connection() as db:
             db.execute(
                 "INSERT INTO workflows(id, created_at, payload) VALUES(?, ?, ?) "
                 "ON CONFLICT(id) DO UPDATE SET payload=excluded.payload",
@@ -44,12 +57,12 @@ class Store:
             )
 
     def get_workflow(self, workflow_id: str) -> Workflow | None:
-        with self._connect() as db:
+        with self._connection() as db:
             row = db.execute("SELECT payload FROM workflows WHERE id=?", (workflow_id,)).fetchone()
         return Workflow.model_validate_json(row["payload"]) if row else None
 
     def list_workflows(self, limit: int = 100) -> list[Workflow]:
-        with self._connect() as db:
+        with self._connection() as db:
             rows = db.execute(
                 "SELECT payload FROM workflows ORDER BY created_at DESC LIMIT ?", (limit,)
             ).fetchall()
@@ -65,7 +78,7 @@ class Store:
 
     def set_setting(self, key: str, value: str, *, secret: bool = False) -> None:
         stored = encrypt_secret(value) if secret else value
-        with self._connect() as db:
+        with self._connection() as db:
             db.execute(
                 "INSERT INTO settings(key, value, encrypted) VALUES(?, ?, ?) "
                 "ON CONFLICT(key) DO UPDATE SET value=excluded.value, encrypted=excluded.encrypted",
@@ -73,7 +86,7 @@ class Store:
             )
 
     def get_setting(self, key: str, default: str | None = None) -> str | None:
-        with self._connect() as db:
+        with self._connection() as db:
             row = db.execute("SELECT value, encrypted FROM settings WHERE key=?", (key,)).fetchone()
         if not row:
             return default
@@ -81,7 +94,7 @@ class Store:
 
     def save_switch_agent(self, role: str, name: str, agent_id: str, api_key: str) -> None:
         encrypted = encrypt_secret(api_key)
-        with self._connect() as db:
+        with self._connection() as db:
             db.execute(
                 "INSERT INTO switch_agents(role, name, agent_id, secret) VALUES(?, ?, ?, ?) "
                 "ON CONFLICT(role) DO UPDATE SET name=excluded.name, agent_id=excluded.agent_id, secret=excluded.secret",
@@ -89,7 +102,7 @@ class Store:
             )
 
     def get_switch_agents(self) -> list[dict[str, str]]:
-        with self._connect() as db:
+        with self._connection() as db:
             rows = db.execute("SELECT role, name, agent_id, secret FROM switch_agents ORDER BY role").fetchall()
         return [
             {"role": row["role"], "name": row["name"], "agent_id": row["agent_id"], "api_key": decrypt_secret(row["secret"])}
@@ -100,7 +113,7 @@ class Store:
         return next((agent for agent in self.get_switch_agents() if agent["role"] == role), None)
 
     def delete_all(self) -> None:
-        with self._connect() as db:
+        with self._connection() as db:
             db.execute("DELETE FROM workflows")
             db.execute("DELETE FROM settings")
             db.execute("DELETE FROM switch_agents")
