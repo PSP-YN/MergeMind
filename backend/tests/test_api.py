@@ -1,7 +1,8 @@
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
 from backend.app.core.store import store
-from backend.app.main import app
+from backend.app.main import SwitchRegistrationRequest, app
 from backend.app.models.workflow import Workflow, WorkflowStatus
 from backend.app.switch.client import websocket_url
 from backend.app.agents.patch_safety import UnsafePatch, validate_unified_diff
@@ -177,3 +178,28 @@ def test_approval_is_blocked_when_implementer_produced_no_patch():
 def test_patch_validator_unwraps_a_markdown_diff_fence():
     fenced = "```diff\ndiff --git a/app.py b/app.py\n--- a/app.py\n+++ b/app.py\n@@ -1 +1 @@\n-old\n+new\n```"
     assert validate_unified_diff(fenced).startswith("diff --git")
+
+
+
+def test_switch_registration_url_rejects_embedded_credentials():
+    try:
+        SwitchRegistrationRequest(
+            base_url="https://user:password@switch.example",
+            registration_key="registration-key-long-enough",
+            room_id="room-123",
+        )
+        assert False, "expected ValidationError"
+    except ValidationError:
+        pass
+
+
+def test_switch_registration_url_rejects_query_parameters():
+    try:
+        SwitchRegistrationRequest(
+            base_url="https://switch.example?token=secret",
+            registration_key="registration-key-long-enough",
+            room_id="room-123",
+        )
+        assert False, "expected ValidationError"
+    except ValidationError:
+        pass
