@@ -25,7 +25,7 @@ The workflow is designed around explicit handoffs and shared room context. It do
 
 ## Safety and honesty boundaries
 
-- No automatic patch application, commit, pull request, merge, deployment, or hackathon submission.
+- No patch is applied to the target repository; no commit, pull request, merge, deployment, or hackathon submission is created.
 - Human approval is required before any future repository-changing action.
 - The current approval action records a decision; it does not apply the patch.
 - Repository contents and issue text are untrusted input.
@@ -116,7 +116,7 @@ Run tests locally:
 
     pytest backend/tests -q
 
-GitHub Actions runs the backend test suite on pushes and pull requests to main. The latest verified CI run passed 21 tests and successfully built and smoke-tested the Docker image. The suite includes API/security checks, Switch cursor/queue checks, and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
+GitHub Actions runs the backend test suite on pushes and pull requests to main. The latest verified CI run passed 26 tests and successfully built and smoke-tested the Docker image. The suite includes API/security checks, Switch cursor/queue checks, and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
 
 A passing CI run verifies the automated unit/API tests only. It does not substitute for a live Switch room, real model responses, or an end-to-end demonstration. Those must be verified with the user's Switch server and configured model.
 
