@@ -52,6 +52,11 @@ def test_switch_handoff_pipeline_reaches_human_review(monkeypatch):
         return "Repository: example/project\n--- FILE: app.py ---\ndef handler(): return 'old'"
 
     monkeypatch.setattr(engine, "read_repository_context", fake_repository_context)
+
+    async def fake_sandbox(_repository, _patch):
+        return "Patch application: PASS (controlled test double)"
+
+    monkeypatch.setattr(engine, "verify_patch_in_sandbox", fake_sandbox)
     client = FakeClient()
 
     async def run_pipeline():
@@ -86,7 +91,7 @@ def test_switch_handoff_pipeline_reaches_human_review(monkeypatch):
     saved = store.get_workflow(workflow.id)
     assert saved is not None
     assert saved.status == WorkflowStatus.AWAITING_APPROVAL
-    assert {"plan", "research", "patch", "review"} <= set(saved.artifacts)
+    assert {"plan", "research", "patch", "sandbox", "review"} <= set(saved.artifacts)
     assert saved.artifacts["patch"].startswith("diff --git")
     assert saved.approved_by_human is False
     assert client.posts and "ready for human review" in client.posts[-1].lower()
