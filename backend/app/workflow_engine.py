@@ -46,7 +46,7 @@ def _parse_handoff(body: str) -> dict | None:
     if marker < 0:
         return None
     leading = body[:marker].strip()
-    if leading and not re.fullmatch(r"(?:@[A-Za-z0-9_.-]+[,\\s:]*)+", leading):
+    if leading and not re.fullmatch(r"(?:@[A-Za-z0-9_.-]+[,\s:]*)+", leading):
         return None
     try:
         value = json.loads(body[marker + len(HANDOFF_PREFIX):])
