@@ -32,7 +32,8 @@
 - **Switch registration:** registers five role agents once and updates their addressing policy.
 - **Switch WebSocket client:** persistent connection, connection ID, room claim, ping/pong, ordered event queue, cursor acknowledgement after processing, and cursor/generation persistence across app restarts.
 - **Workflow engine:** role prompts and explicit handoffs. Each specialist receives an addressed Switch message.
-- **Repository reader:** read-only access to public GitHub repository metadata, recursive tree, and selected files.\n- **Patch sandbox:** clones the public repository into a temporary directory, applies the proposal there, checks the diff, and optionally runs Python syntax compilation in a no-network, read-only Docker container. It never executes repository tests or arbitrary project commands.
+- **Repository reader:** read-only access to public GitHub repository metadata, recursive tree, and selected files.
+- **Patch sandbox:** clones the public repository into a temporary directory, applies the proposal there, checks the diff, and optionally runs Python syntax compilation in a no-network, read-only Docker container. It never executes repository tests or arbitrary project commands.
 - **LLM client:** OpenAI-compatible chat-completions endpoint; default is local Ollama.
 - **Dashboard:** task intake, Switch status, workflow trace, artifacts, approval and rejection.
 
