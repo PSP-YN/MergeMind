@@ -219,6 +219,7 @@ class SwitchAgentClient:
                     self.ready.clear()
                 finally:
                     self._socket = None
+                    self.ready.clear()
                 if not self.stopped.is_set():
                     await asyncio.sleep(settings.switch_reconnect_seconds)
         finally:
