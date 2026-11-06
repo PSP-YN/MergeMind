@@ -57,6 +57,8 @@ Verify:
 - the workflow reaches awaiting approval;
 - no repository files were changed automatically.
 
+The sandbox applies the proposed diff only to a disposable clone, checks patch applicability, and—if Docker plus the python:3.12-slim image are available locally—runs Python syntax compilation in a read-only, no-network container. It does not execute the target project's tests.
+
 The automated test suite does not replace this live integration run. If any agent remains disconnected or a stage fails, capture the dashboard status and the relevant Switch error (redact all keys) so it can be debugged.
 
 ## 6. Final recording and approval
