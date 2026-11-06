@@ -130,3 +130,18 @@ def test_patch_validator_rejects_parent_path():
         assert False, "expected UnsafePatch"
     except UnsafePatch:
         pass
+
+
+
+def test_switch_agent_api_keys_are_encrypted_at_rest():
+    from cryptography.fernet import Fernet
+    from backend.app.core.config import settings
+
+    settings.encryption_key = Fernet.generate_key().decode("ascii")
+    store.save_switch_agent("planner", "mergemind-planner", "agent-id", "sensitive-agent-api-key")
+    saved = store.get_switch_agent("planner")
+    assert saved is not None
+    assert saved["api_key"] == "sensitive-agent-api-key"
+    with store._connection() as db:
+        row = db.execute("SELECT secret FROM switch_agents WHERE role='planner'").fetchone()
+    assert "sensitive-agent-api-key" not in row["secret"]
