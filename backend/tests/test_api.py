@@ -171,3 +171,9 @@ def test_approval_is_blocked_when_implementer_produced_no_patch():
     response = client.post(f"/api/workflows/{workflow.id}/approve", headers=headers())
     assert response.status_code == 409
     assert "valid patch" in response.json()["detail"]
+
+
+
+def test_patch_validator_unwraps_a_markdown_diff_fence():
+    fenced = "```diff\ndiff --git a/app.py b/app.py\n--- a/app.py\n+++ b/app.py\n@@ -1 +1 @@\n-old\n+new\n```"
+    assert validate_unified_diff(fenced).startswith("diff --git")
