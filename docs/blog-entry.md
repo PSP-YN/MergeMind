@@ -43,7 +43,7 @@ Repository inspection is read-only. Model-generated patches are validated as uni
 
 ## What is deliberately not claimed
 
-This project distinguishes generated recommendations from verified execution. The current workflow does not yet apply patches or execute the repository's test suite in an isolated sandbox. The Reviewer receives no test output and must say that tests were not run. The app is a local hackathon build, not a certified multi-user production service.
+This project distinguishes generated recommendations from verified execution. The workflow applies the proposal only to a disposable clone, checks patch applicability and whitespace, and can run Python syntax compilation in a no-network, read-only Docker container. It does not execute the repository's test suite. The Reviewer must distinguish syntax checks from tests and must say that project tests were not run. The app is a local hackathon build, not a certified multi-user production service.
 
 This boundary matters: a convincing demo should show what the system actually did, not what a roadmap says it might do.
 
@@ -62,6 +62,6 @@ Evidence to insert before publication:
 
 The main design lesson is that multi-agent work needs explicit boundaries. Roles should have bounded responsibilities, each handoff should carry enough context to be useful, and the review stage should be independent of implementation. Switch makes the collaboration trace visible; the dashboard makes the result inspectable.
 
-The next engineering step is an isolated execution sandbox that can apply a proposed patch to a disposable worktree, run a constrained test command, and return verifiable test output without exposing the host. That should be added only with resource limits, network restrictions, and a human-controlled path for any change to the real repository.
+The next engineering step is controlled test execution inside the sandbox. That requires dependency policy, strict resource limits, network restrictions, no host secrets, and a human-controlled path for any change to the real repository.
 
 MergeMind's goal is not to remove the engineer from the loop. It is to make the work between request and review more coordinated, inspectable, and accountable.
