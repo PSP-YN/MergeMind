@@ -1,5 +1,7 @@
 # MergeMind
 
+[![Backend CI](https://github.com/PSP-YN/MergeMind/actions/workflows/backend-tests.yml/badge.svg)](https://github.com/PSP-YN/MergeMind/actions/workflows/backend-tests.yml)
+
 **A Switch-powered AI software engineering team.** MergeMind turns an engineering task into a coordinated workflow across five specialist agents: Coordinator, Planner, Researcher, Implementer, and Reviewer. They communicate through a shared Switch room.
 
 > Flip the Switch Hackathon · Best Business Workflow · 2026  
@@ -114,7 +116,7 @@ Run tests locally:
 
     pytest backend/tests -q
 
-GitHub Actions runs the backend test suite on pushes and pull requests to main. The CI suite includes API/security checks and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
+GitHub Actions runs the backend test suite on pushes and pull requests to main. The latest verified CI run passed 21 tests and successfully built and smoke-tested the Docker image. The suite includes API/security checks, Switch cursor/queue checks, and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
 
 A passing CI run verifies the automated unit/API tests only. It does not substitute for a live Switch room, real model responses, or an end-to-end demonstration. Those must be verified with the user's Switch server and configured model.
 
@@ -124,6 +126,7 @@ A passing CI run verifies the automated unit/API tests only. It does not substit
 - [Demo recording script](docs/demo-script.md)
 - [Best Blog entry draft](docs/blog-entry.md)
 - [Production readiness review](docs/production-readiness.md)
+- [Remaining owner setup steps](docs/remaining-user-steps.md)
 
 ## Hackathon deliverables
 
