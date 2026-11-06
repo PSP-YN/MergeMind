@@ -7,6 +7,10 @@ class UnsafePatch(ValueError):
 
 def validate_unified_diff(patch: str) -> str:
     patch = patch.strip()
+    if patch.startswith("```") and patch.endswith("```"):
+        lines = patch.splitlines()
+        if len(lines) >= 3 and lines[-1].strip() == "```":
+            patch = "\n".join(lines[1:-1]).strip()
     if patch == "NO_PATCH":
         return patch
     if len(patch.encode("utf-8")) > 500_000:
