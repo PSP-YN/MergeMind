@@ -32,7 +32,7 @@ Local, single-user hackathon demonstration. The documented run command binds to 
 1. Add user identity and authorization with tenant isolation.
 2. Move to PostgreSQL and introduce migrations, backups, and restore tests.
 3. Add rate limits, structured audit logs, observability, and alerting.
-4. Add a hardened, disposable test execution sandbox with no host secrets and strict CPU, memory, time, filesystem, and network limits.
+4. Extend the existing syntax-only sandbox to run explicitly approved test commands under dependency, CPU, memory, time, filesystem, and network policies, without host secrets or unrestricted shell execution.
 5. Add credential rotation and revocation workflows.
 6. Complete security review, dependency scanning, and integration tests against a real Switch server.
 7. Review and approve the deployment configuration.
