@@ -30,7 +30,7 @@
 - **FastAPI:** dashboard API, admin-token guard, health endpoint, workflow lifecycle.
 - **SQLite Store:** durable workflow records, event trace, artifacts, encrypted Switch agent credentials.
 - **Switch registration:** registers five role agents once and updates their addressing policy.
-- **Switch WebSocket client:** persistent connection, connection ID, room claim, ping/pong, cursor tracking, reconnect.
+- **Switch WebSocket client:** persistent connection, connection ID, room claim, ping/pong, ordered event queue, cursor acknowledgement after processing, and cursor/generation persistence across app restarts.
 - **Workflow engine:** role prompts and explicit handoffs. Each specialist receives an addressed Switch message.
 - **Repository reader:** read-only access to public GitHub repository metadata, recursive tree, and selected files.
 - **LLM client:** OpenAI-compatible chat-completions endpoint; default is local Ollama.
