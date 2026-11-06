@@ -48,10 +48,7 @@ The workflow is designed around explicit handoffs and shared room context. It do
 
     git clone https://github.com/PSP-YN/MergeMind.git
     cd MergeMind
-    python -m venv .venv
-    source .venv/bin/activate
-    pip install -r backend/requirements.txt
-    python -m backend.app.cli init
+    bash scripts/setup.sh
 
 The init command creates a local .env containing a random admin token and encryption key. It refuses to overwrite an existing .env. Keep that file private.
 
@@ -61,7 +58,15 @@ Start a local Ollama server and pull the default model:
 
 Then run the app:
 
-    uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+    bash scripts/run.sh
+
+To run the automated test suite:
+
+    bash scripts/test.sh
+
+Alternatively, use Docker Compose after creating .env with the setup command:
+
+    docker compose up --build
 
 Open http://127.0.0.1:8000. Copy the admin token from .env into the dashboard.
 
@@ -109,9 +114,16 @@ Run tests locally:
 
     pytest backend/tests -q
 
-GitHub Actions runs the backend test suite on pushes and pull requests to main.
+GitHub Actions runs the backend test suite on pushes and pull requests to main. The CI suite includes API/security checks and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
 
 A passing CI run verifies the automated unit/API tests only. It does not substitute for a live Switch room, real model responses, or an end-to-end demonstration. Those must be verified with the user's Switch server and configured model.
+
+## Hackathon preparation
+
+- [Submission description](docs/submission.md)
+- [Demo recording script](docs/demo-script.md)
+- [Best Blog entry draft](docs/blog-entry.md)
+- [Production readiness review](docs/production-readiness.md)
 
 ## Hackathon deliverables
 
