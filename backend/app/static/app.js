@@ -50,7 +50,7 @@
     $("detailRepo").textContent=w.repository;$("detailId").textContent=w.id;
     $("approve").classList.toggle("hidden",w.status!=="awaiting_approval" || !w.artifacts?.patch || w.artifacts.patch==="NO_PATCH");
     $("reject").classList.toggle("hidden",w.status!=="awaiting_approval");
-    const keys=["plan","research","patch","review"].filter(k=>w.artifacts?.[k]);
+    const keys=["plan","research","patch","sandbox","review"].filter(k=>w.artifacts?.[k]);
     $("artifactTabs").innerHTML=keys.map(k=>'<button class="'+(k===selectedArtifact?'':'secondary')+'" data-artifact="'+k+'">'+k+'</button>').join("");
     if(!keys.includes(selectedArtifact))selectedArtifact=keys[0]||"";
     document.querySelectorAll("[data-artifact]").forEach(el=>el.addEventListener("click",()=>{selectedArtifact=el.dataset.artifact;showWorkflow(id);}));
