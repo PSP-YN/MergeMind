@@ -25,12 +25,16 @@ class AgentWorkerManager:
                 continue
             async def handler(payload, client, role_name=role):
                 await handle_agent_message(role_name, payload, client)
+            def persist_state(connection_id, cursor, generation, role_name=role):
+                store.save_switch_runtime(role_name, connection_id, cursor, generation)
             client = SwitchAgentClient(
                 base_url=base_url,
                 agent_id=agent["agent_id"],
                 api_key=agent["api_key"],
                 room_id=room_id,
                 handler=handler,
+                runtime_state=store.get_switch_runtime(role),
+                state_callback=persist_state,
             )
             self.clients[role] = client
             self.tasks[role] = asyncio.create_task(client.run_forever(), name=f"switch-{role}")
