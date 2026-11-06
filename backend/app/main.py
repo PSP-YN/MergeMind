@@ -76,8 +76,15 @@ class SwitchRegistrationRequest(BaseModel):
     @classmethod
     def validate_base_url(cls, value: str) -> str:
         parsed = urlparse(value.strip())
-        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
-            raise ValueError("Enter the Switch agent bridge URL using HTTP or HTTPS")
+        if (
+            parsed.scheme not in {"http", "https"}
+            or not parsed.netloc
+            or parsed.username
+            or parsed.password
+            or parsed.query
+            or parsed.fragment
+        ):
+            raise ValueError("Enter a clean Switch agent bridge URL using HTTP or HTTPS, without credentials or query parameters")
         return value.strip().rstrip("/")
 
 
