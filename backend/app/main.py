@@ -40,6 +40,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        if request.url.path.startswith("/api/"):
+            response.headers["Cache-Control"] = "no-store"
+            response.headers["Pragma"] = "no-cache"
         response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; script-src 'self'; "
@@ -97,6 +100,7 @@ def agents(_: None = Depends(require_admin)) -> list[dict[str, str]]:
 def get_switch_status(_: None = Depends(require_admin)):
     return {
         "configured": bool(store.get_setting("switch_base_url") and store.get_setting("switch_room_id")),
+        "llm_model": settings.llm_model,
         "base_url": store.get_setting("switch_base_url"),
         "room_id": store.get_setting("switch_room_id"),
         "agents": worker_manager.status(),
