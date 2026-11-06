@@ -78,3 +78,38 @@ def test_unaddressed_room_messages_advance_cursor_without_running_agent():
         await asyncio.gather(consumer, return_exceptions=True)
 
     asyncio.run(run())
+
+
+
+def test_switch_runtime_cursor_is_persisted_for_process_restarts():
+    from backend.app.core.store import store
+
+    store.delete_all()
+    store.save_switch_runtime("planner", "persistent-connection", 987, 12)
+    assert store.get_switch_runtime("planner") == {
+        "connection_id": "persistent-connection",
+        "cursor": 987,
+        "generation": 12,
+    }
+
+
+def test_switch_event_gap_stops_agent_instead_of_skipping_messages():
+    async def run():
+        async def handler(payload, client):
+            return None
+
+        client = SwitchAgentClient(
+            base_url="https://switch.example",
+            agent_id="agent-1",
+            api_key="test-key",
+            room_id="room-1",
+            handler=handler,
+        )
+        try:
+            await client._handle_event({"event": "gap", "data": {"reason": "expired"}})
+            assert False, "expected SwitchProtocolError"
+        except Exception as exc:
+            assert "event gap" in str(exc)
+            assert client.stopped.is_set()
+
+    asyncio.run(run())
