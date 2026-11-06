@@ -26,7 +26,7 @@ Switch is the core coordination layer. Every role is registered independently, j
 FastAPI, SQLite, an OpenAI-compatible model endpoint (local Ollama by default), GitHub REST API for read-only repository context, and the current Switch WebSocket/HTTP agent protocol. Agent credentials are encrypted at rest; the registration key is not persisted.
 
 ## Safety
-No patch is automatically applied, committed, merged, deployed, or submitted. The dashboard's approval action records the human decision only. Test execution in an isolated sandbox is not yet implemented and must not be claimed in the final demo.
+No patch is automatically applied, committed, merged, deployed, or submitted. The dashboard's approval action records the human decision only. A restricted disposable-clone patch-application and Python syntax-check sandbox is implemented. The target repository test suite is not executed and must not be claimed in the final demo.
 
 ## Demo evidence to capture before submission
 - All five agents registered and connected in one Switch room.
