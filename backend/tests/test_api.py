@@ -156,3 +156,18 @@ def test_dashboard_assets_are_local_and_security_policy_is_strict():
     assert stylesheet.status_code == 200
     assert "unsafe-inline" not in page.headers.get("content-security-policy", "")
     assert "X-Frame-Options" in page.headers
+
+
+
+def test_approval_is_blocked_when_implementer_produced_no_patch():
+    workflow = Workflow(
+        title="Fix pagination",
+        description="Fix the pagination bug when filters are active.",
+        repository="https://github.com/example/project",
+        status=WorkflowStatus.AWAITING_APPROVAL,
+        artifacts={"patch": "NO_PATCH"},
+    )
+    store.save_workflow(workflow)
+    response = client.post(f"/api/workflows/{workflow.id}/approve", headers=headers())
+    assert response.status_code == 409
+    assert "valid patch" in response.json()["detail"]
