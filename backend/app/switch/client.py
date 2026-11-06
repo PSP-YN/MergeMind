@@ -65,6 +65,13 @@ class SwitchAgentClient:
             logger.exception("Could not persist Switch cursor for %s", self.agent_id)
 
     async def operation(self, name: str, arguments: dict) -> dict:
+        if self.stopped.is_set():
+            raise SwitchProtocolError("This Switch agent connection has been stopped")
+        if not self.ready.is_set():
+            try:
+                await asyncio.wait_for(self.ready.wait(), timeout=30)
+            except TimeoutError as exc:
+                raise SwitchProtocolError("Switch agent connection did not recover in time") from exc
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "X-Switch-Connection-Id": self.connection_id,
