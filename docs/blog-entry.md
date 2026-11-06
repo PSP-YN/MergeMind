@@ -35,7 +35,7 @@ The patch is never applied automatically. Approval is a decision record, not per
 
 MergeMind uses FastAPI for the local dashboard and API, SQLite for workflow persistence, an OpenAI-compatible model endpoint for the specialist reasoning steps, and the Switch WebSocket/HTTP protocol for agent coordination.
 
-The default model configuration points to local Ollama, so a developer can run the workflow without a hosted model key. The dashboard can be configured to use another compatible endpoint when required.
+The default model configuration points to local Ollama, so a developer can run the workflow without a hosted model key. The local environment configuration can be changed to use another compatible endpoint when required.
 
 Credentials have separate lifecycles. The Switch registration key is used transiently and is not saved. Each returned agent API key is encrypted at rest with a Fernet key stored in the local environment file. The local admin token protects dashboard API actions.
 
