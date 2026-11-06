@@ -23,7 +23,7 @@ MergeMind separates those responsibilities into five Switch agents:
 Switch is the core coordination layer. Every role is registered independently, joins the same room, receives addressed events over WebSocket, and delegates with Switch's targeted-message operation. The dashboard is for task intake and result inspection, not a replacement for Switch.
 
 ## Technical implementation
-FastAPI, SQLite, an OpenAI-compatible model endpoint (local Ollama by default), GitHub REST API for read-only repository context, and the current Switch WebSocket/HTTP agent protocol. Agent credentials are encrypted at rest; the registration key is not persisted.
+FastAPI, SQLite, an OpenAI-compatible model endpoint (local Ollama by default), GitHub REST API for read-only repository context, the current Switch WebSocket/HTTP agent protocol, and a disposable-clone patch validation sandbox. Agent credentials are encrypted at rest; the registration key is not persisted. The automated suite currently passes 26 tests, and CI builds and smoke-tests the container image.
 
 ## Safety
 No patch is automatically applied, committed, merged, deployed, or submitted. The dashboard's approval action records the human decision only. A restricted disposable-clone patch-application and Python syntax-check sandbox is implemented. The target repository test suite is not executed and must not be claimed in the final demo.
