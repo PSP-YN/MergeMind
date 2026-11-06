@@ -20,3 +20,18 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Run tests
         run: python -m pytest backend/tests -q
+      - name: Build container image
+        run: docker build -t mergemind-ci .
+      - name: Smoke test container
+        run: |
+          docker run -d --name mergemind-ci -p 127.0.0.1:18000:8000 mergemind-ci
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:18000/health; then
+              docker rm -f mergemind-ci
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs mergemind-ci
+          docker rm -f mergemind-ci
+          exit 1
