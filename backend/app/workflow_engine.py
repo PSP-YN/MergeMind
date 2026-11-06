@@ -71,7 +71,37 @@ async def handle_agent_message(role: str, event: dict, client) -> None:
     body = str(event.get("body") or "").strip()
     handoff = _parse_handoff(body)
     if role == "coordinator":
-        await _handle_coordinator(handoff, body, client)
+        try:
+            await _handle_coordinator(handoff, body, client)
+        except Exception as exc:
+            logger.exception("Coordinator failed while handling a Switch message")
+            workflow_id = handoff.get("workflow_id") if handoff else None
+            workflow = store.get_workflow(str(workflow_id)) if workflow_id else None
+            if workflow is not None:
+                try:
+                    if handoff and handoff.get("stage") == "complete":
+                        _update(
+                            workflow.id,
+                            actor="Coordinator",
+                            kind="room_notification_failed",
+                            message="The workflow completed, but the final Switch room notification failed.",
+                        )
+                    else:
+                        _update(
+                            workflow.id,
+                            status=WorkflowStatus.FAILED,
+                            actor="Coordinator",
+                            kind="stage_failed",
+                            message=f"Coordinator dispatch failed: {type(exc).__name__}: {str(exc)[:250]}",
+                        )
+                except Exception:
+                    logger.exception("Could not persist coordinator failure for %s", workflow.id)
+            try:
+                await client.post_message(
+                    "MergeMind Coordinator encountered an error. Check the dashboard workflow trace for details."
+                )
+            except Exception:
+                logger.exception("Could not post coordinator failure notice")
         return
     if not handoff:
         logger.info("Ignored non-MergeMind message addressed to %s", role)
@@ -128,8 +158,17 @@ async def handle_agent_message(role: str, event: dict, client) -> None:
             await _send(client, "coordinator", workflow, "complete", review=result)
     except Exception as exc:
         logger.exception("Workflow stage %s failed for %s", role, workflow.id)
-        _update(workflow.id, status=WorkflowStatus.FAILED, actor=role.title(),
-                kind="stage_failed", message=f"Stage failed: {type(exc).__name__}: {str(exc)[:300]}")
+        try:
+            _update(workflow.id, status=WorkflowStatus.FAILED, actor=role.title(),
+                    kind="stage_failed", message=f"Stage failed: {type(exc).__name__}: {str(exc)[:300]}")
+        except Exception:
+            logger.exception("Could not persist stage failure for %s", workflow.id)
+        try:
+            await client.post_message(
+                f"MergeMind {role.title()} stage failed for workflow {workflow.id}. Check the dashboard trace."
+            )
+        except Exception:
+            logger.exception("Could not post stage failure notice")
 
 
 async def _handle_coordinator(handoff: dict | None, body: str, client) -> None:
