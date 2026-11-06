@@ -30,6 +30,7 @@
     const connected=Object.values(s.agents||{}).filter(a=>a.connected).length;
     $("switchState").innerHTML='<span class="dot '+(connected===5?'ok':'warn')+'"></span><span>'+connected+'/5 agents connected</span>';
     $("agentCount").textContent=(s.registered_agents||[]).length+" registered";
+    if(s.llm_model)$("modelName").textContent="Configured model · "+s.llm_model;
     $("agentList").innerHTML=(s.registered_agents||[]).map(a=>{
       const live=s.agents?.[a.role]?.connected;
       return '<div class="agent"><strong>'+esc(a.name)+'</strong><small><span class="dot '+(live?'ok':'')+'" style="display:inline-block;vertical-align:middle"></span> '+(live?'Connected':'Registered · waiting for room access')+'</small></div>';
@@ -64,7 +65,7 @@
     const button=$("registerSwitch");button.disabled=true;button.textContent="Registering…";
     try{
       const result=await api("/api/switch/register",{method:"POST",body:JSON.stringify({base_url:$("switchUrl").value.trim(),registration_key:$("registrationKey").value,room_id:$("roomId").value.trim()})});
-      $("registrationKey").value="";notice("switchNotice",result.registered_roles.length+" agents registered. "+result.next_step,"good");
+      $("registrationKey").value="";notice("switchNotice","Switch setup completed for "+result.total_roles+" agent roles. "+result.next_step,"good");
       await new Promise(r=>setTimeout(r,1200));await loadStatus();
     }catch(e){notice("switchNotice",e.message,"warn");}
     finally{button.disabled=false;button.textContent="Register five agents";}
