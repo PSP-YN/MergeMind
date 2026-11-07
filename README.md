@@ -21,7 +21,7 @@ The workflow is:
 6. The Reviewer independently inspects the proposal and reports findings.
 7. A human approves or rejects the review in the dashboard.
 
-The workflow is designed around explicit handoffs and shared room context. It does not silently fall back to local-only messaging when Switch is unavailable.
+The dashboard/API request enters the Coordinator intake handler, which sends the first addressed Planner handoff through Switch. This deliberately avoids a self-addressed message from the Coordinator agent to itself. Planner → Researcher → Implementer → Reviewer → Coordinator handoffs then travel as addressed Switch room events. The workflow is designed around explicit handoffs and shared room context. It does not silently fall back to local-only messaging when Switch is unavailable.
 
 ## Business workflow and decision control
 
