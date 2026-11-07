@@ -62,7 +62,12 @@ class AgentWorkerManager:
             await asyncio.wait_for(client.ready.wait(), timeout=20)
         except TimeoutError as exc:
             raise RuntimeError("Coordinator is not connected to the selected Switch room yet.") from exc
-        await client.send_targeted("mergemind-coordinator", handoff)
+        # The API dispatch itself is the Coordinator's intake event. Do not
+        # send a targeted message from the Coordinator agent to itself: Switch
+        # room streams are for inter-agent handoffs, and self-addressing is not
+        # a reliable way to wake the sender. Run the coordinator stage locally;
+        # its next handoff to the Planner is still delivered through Switch.
+        await handle_agent_message("coordinator", {"body": handoff}, client)
 
     def status(self) -> dict:
         return {
