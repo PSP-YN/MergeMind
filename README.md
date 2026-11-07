@@ -127,9 +127,11 @@ All dashboard/API routes other than /health require the X-MergeMind-Admin-Token 
 
 ## Verification
 
-Run tests locally:
+Run the same test command used by the project helper script:
 
-    pytest backend/tests -q
+    bash scripts/test.sh
+
+This invokes `python -m pytest` from the repository root so the `backend` package is resolved consistently.
 
 GitHub Actions runs the backend test suite on pushes and pull requests to main. The latest verified CI run passed 26 tests and successfully built and smoke-tested the Docker image. The suite includes API/security checks, Switch cursor/queue checks, and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
 See [run #98](https://github.com/PSP-YN/MergeMind/actions/runs/42162575248) for the 26-test pass, Docker image build, and container health smoke test.
