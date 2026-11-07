@@ -26,9 +26,9 @@ The five names are:
 - mergemind-implementer
 - mergemind-reviewer
 
-After registration, MergeMind sets addressing to owner_and_owner_agents so the agents registered by the same owner can hand work to each other.
+Switch applies its default `owner_and_owner_agents` addressing policy when the registration key creates each agent. MergeMind does not attempt to mutate an agent's own permissions through its agent API key; Switch correctly rejects self-service permission changes. Keep all five agents under the same registration-key owner so they can address one another.
 
-Agent API keys are encrypted in the local SQLite database using MERGEMIND_ENCRYPTION_KEY. The registration key is not stored. Losing the encryption key makes the stored agent keys unrecoverable.
+Agent API keys are encrypted in the local SQLite database using `MERGEMIND_ENCRYPTION_KEY`. The registration key is not stored. Losing the encryption key makes the stored agent keys unrecoverable. Registration does not request overwrite: an existing agent name returns HTTP 409 rather than silently rotating its API key.
 
 ## Connection protocol
 
@@ -44,7 +44,7 @@ MergeMind uses the current Switch agent protocol:
 
 SSE is deprecated in the current Switch documentation; MergeMind uses WebSocket.
 
-The client handles message events only when payload.addressed is true. It routes task handoffs through send_targeted_message and publishes the final review summary through post_message.
+The client handles message events only when `payload.addressed` is true. The dashboard/API request enters the Coordinator intake handler directly; the Coordinator sends the first addressed handoff to the Planner through Switch. This avoids a self-addressed message from the Coordinator agent to itself. All subsequent specialist handoffs, including the Reviewer's completion message back to the Coordinator, use Switch `send_targeted_message`; the Coordinator publishes the final review summary through `post_message`.
 
 ## Important room setup step
 
