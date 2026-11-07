@@ -153,6 +153,22 @@ Automated CI and unit tests do not replace this live integration check. If any i
 | Model request fails | Check Ollama is running, the model is pulled, and the configured model name matches. |
 | Port conflict | Stop the conflicting service or set `MERGEMIND_PORT`, `SWITCH_PORT`, or `GATEWAY_PORT` consistently. |
 
-## Current local-session record
+## Current local-session record (7 November 2026)
 
-The local Switch core health endpoint, Gateway UI, MergeMind dashboard, and Ollama service were started and checked in the development environment. The local private room `MergeMind Engineering Review` exists with a temporary bootstrap agent. The Switch Gateway session is signed in on the dedicated local Chrome profile. The five MergeMind agents have not yet been registered or added to the room, and no live workflow has been verified. Do not present this partial setup as a completed five-agent demo. Update this record only after the verification checklist above passes.
+Verified in the local development environment:
+
+- Switch core health endpoint returned HTTP 200.
+- Switch Gateway was signed in through the dedicated local Chrome session.
+- MergeMind health endpoint returned `{"status":"ok","app":"MergeMind","version":"0.2.0"}`.
+- The private room `MergeMind Engineering Review` was created with ID `b5f18bc2-59cf-4892-bb95-36985fe83b8b`.
+- All five MergeMind agents were registered, added to that room, and reported connected by MergeMind (5/5).
+- A workflow was created and dispatch was accepted by the MergeMind API.
+
+Not yet verified:
+
+- The workflow remained in `created` with only its initial `workflow_created` event; the Planner → Researcher → Implementer → Reviewer handoffs did not appear in the workflow trace during this session.
+- A completed model-backed result and human-review state have not been demonstrated.
+- The temporary `mergemind-bootstrap` agent remains in the room and should be removed after confirming the five-agent room works.
+- A stable multi-minute connection and an end-to-end recording have not been verified.
+
+Therefore, the live five-agent connection is verified, but the full workflow is **not yet a completed demonstration**. Do not claim that the workflow completed, that the model generated a verified patch, or that the approval gate was exercised until the remaining checks pass.
