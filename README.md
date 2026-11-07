@@ -143,6 +143,8 @@ A passing CI run verifies the automated unit/API tests only. It does not substit
 - [Submission description](docs/submission.md)
 - [Demo recording script](docs/demo-script.md)
 - [Best Blog article](docs/blog-entry.md)
+- [Blog publishing guide](docs/blog-publishing-guide.md)
+- [LinkedIn / #HowISwitch post draft](docs/linkedin-post.md)
 - [Production readiness review](docs/production-readiness.md)
 - [Remaining owner setup steps](docs/remaining-user-steps.md)
 
