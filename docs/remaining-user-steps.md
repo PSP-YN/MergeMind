@@ -1,6 +1,6 @@
 # Remaining owner actions before the final demo
 
-The repository and application code are prepared. The following steps require access to your own machine and Switch workspace; credentials must not be shared in chat or committed.
+The repository and application code are prepared. Local services, the private room, and the five registered agent identities have been provisioned. The remaining work is to fix and verify the live WebSocket workflow, then record and publish only the verified result. Credentials must not be shared in chat or committed.
 
 ## 1. Pull and configure locally
 
@@ -26,7 +26,7 @@ Open http://127.0.0.1:8000 and paste MERGEMIND_ADMIN_TOKEN from your local .env 
 
 ## 4. Connect your Switch workspace
 
-For the combined local setup, prefer `bash scripts/start-demo.sh`; it starts Switch core, Gateway, MergeMind, and checks their health. Follow [the complete local demo guide](local-demo.md). To register the five agents without putting the key in shell history, use `bash scripts/register-switch.sh`.
+The combined local stack is started with `bash scripts/start-demo.sh`; it starts Switch core, Gateway, MergeMind, and checks their health. In the current demo workspace, the five MergeMind agents have already been registered and added to the private room. Do not re-register or rotate their keys while debugging. Follow [the complete local demo guide](local-demo.md).
 
 In Switch:
 1. Start or select the Switch server for the hackathon.
@@ -43,7 +43,7 @@ In the MergeMind dashboard:
    - mergemind-researcher
    - mergemind-implementer
    - mergemind-reviewer
-4. Wait until the dashboard reports all five connected.
+4. Confirm all five sessions remain connected over multiple heartbeat intervals. In the current run they initially connected, then detached after roughly ten heartbeat cycles; this must be fixed before the workflow can be considered live.
 
 The registration key is not saved. Returned agent API keys are encrypted in the local database. Keep the generated encryption key in .env safe; losing it makes the saved agent keys unrecoverable.
 
@@ -61,7 +61,7 @@ Verify:
 
 The sandbox applies the proposed diff only to a disposable clone, checks patch applicability, and—if Docker plus the python:3.12-slim image are available locally—runs Python syntax compilation in a read-only, no-network container. To enable that syntax check on a machine with Docker, pull the image once with: docker pull python:3.12-slim. It does not execute the target project's tests.
 
-The automated test suite does not replace this live integration run. If any agent remains disconnected or a stage fails, capture the dashboard status and the relevant Switch error (redact all keys) so it can be debugged.
+The automated test suite does not replace this live integration run. The current test workflow is still at `created` with no agent outputs. The Switch logs show all five WebSockets were accepted, then detached and expired after heartbeat lapse. Debug the heartbeat/reconnect path and rerun the workflow before recording.
 
 ## 6. Final recording and approval
 
@@ -73,4 +73,4 @@ Do not deploy or submit until the owner has reviewed the final build, blog, demo
 
 The polished article is public in the repository at [docs/blog-entry.md](https://github.com/PSP-YN/MergeMind/blob/main/docs/blog-entry.md). It has not yet been published to an external blog platform. Choose the destination (for example, an existing WordPress site or the personal portfolio) and connect the publishing account before posting.
 
-The LinkedIn announcement should link to the final published article and describe only verified results. No external blog post or LinkedIn post has been published from this session yet. The current local Switch services and private demo room are recorded in [local-demo.md](local-demo.md); the five-agent run must be verified before recording or publishing claims about the live integration.
+The LinkedIn announcement should link to the final published article and describe only verified results. No external blog post or LinkedIn post has been published from this session yet. The current five-agent heartbeat failure and workflow status are recorded in [local-demo.md](local-demo.md); do not publish claims of a completed live workflow until the verification checklist passes.
