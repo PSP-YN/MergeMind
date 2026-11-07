@@ -60,7 +60,7 @@ FastAPI, SQLite, an OpenAI-compatible model endpoint (local Ollama by default), 
 
 ## Verification status
 
-The latest verified [GitHub Actions run #98](https://github.com/PSP-YN/MergeMind/actions/runs/42162575248) completed successfully: **26 automated tests passed**, the Docker image built, and the container health smoke test passed.
+The latest verified [GitHub Actions run #106](https://github.com/PSP-YN/MergeMind/actions/runs/42392532584) completed successfully: **26 automated tests passed**, the Docker image built, and the container health smoke test passed.
 
 This is automated implementation evidence, not proof of a live Switch session. The live Switch room, five connected agents, and real model-response workflow still need to be exercised and recorded. Do not claim those steps are complete until they have been demonstrated.
 
@@ -78,3 +78,65 @@ Do not use synthetic room messages or a staged screenshot as evidence of a live 
 ## Final verification gate
 
 This draft is not a declaration that the live workflow has passed. Replace or remove any claim not demonstrated by the final run. Do not submit until the owner has reviewed and explicitly approved the final submission.
+
+
+---
+
+## Ready-to-paste submission form
+
+**Team:** CHAKRAVYUHA  
+**Team code:** WXT2YB  
+**Project title:** MergeMind — A Reviewable Engineering Workflow with Five AI Agents
+
+**Tracks:** Best Business Workflow; Best Blog
+
+### Project description
+
+MergeMind turns a software change request into a reviewable work package using five specialist AI agents coordinated through Switch. The Coordinator delegates to the Planner, Researcher, Implementer and Reviewer. Each role is a separately registered Switch agent in a shared room. The workflow produces a scoped plan, repository-backed evidence, a proposed unified diff, an independent review and a human approval or rejection record. It is designed for engineering teams that need clearer ownership, traceable handoffs and a review boundary before code changes are applied. MergeMind does not silently write to, commit, merge or deploy changes to the target repository.
+
+### GitHub repository
+
+https://github.com/PSP-YN/MergeMind
+
+### Demo video
+
+**Pending owner recording.** Record a video under three minutes, upload it to YouTube or Loom as public/unlisted, then paste the final URL here. Use [demo-script.md](demo-script.md).
+
+### Live demo or deployment
+
+**Pending public deployment and end-to-end verification.** Do not paste a local URL or an unverified preview. The public URL must be reachable by a judge without signing in and must not expose admin credentials or agent secrets.
+
+### Pull requests
+
+Add the URLs of genuine upstream pull requests to `sandbox-quantum/switch` only after they have been opened. Do not use fork branch URLs as substitutes for PR URLs. Current prepared contribution branch: [hackathon/808-contributor-quickstart](https://github.com/PSP-YN/switch/tree/hackathon/808-contributor-quickstart); an upstream PR has not yet been opened.
+
+### Blog post
+
+Publish [blog-entry.md](blog-entry.md) on DEV Community first (recommended) or Hashnode. Follow [blog-publishing-guide.md](blog-publishing-guide.md), then paste the public article URL. The repository copy is not an externally published blog URL.
+
+### Your Wispr usage card
+
+Leave blank. This submission is not entering Code with Wispr.
+
+### Your #HowISwitch post
+
+Publish the reviewed text in [linkedin-post.md](linkedin-post.md) after replacing the live demo and video placeholders with verified public URLs. Paste the resulting public LinkedIn post URL into this field.
+
+### How did you use Switch in your project?
+
+MergeMind uses Switch as its agent-to-agent coordination layer. It registers five distinct roles—Coordinator, Planner, Researcher, Implementer and Reviewer—as separate Switch agents and connects them to one shared room. Each agent receives room events through Switch's authenticated WebSocket agent protocol. Handoffs are addressed messages sent through Switch's HTTP agent operations, rather than hidden local function calls. The dashboard handles task intake and human review; Switch carries the collaboration and handoffs. The workflow is designed to take a change request through planning, public-repository research, a proposed diff and independent review, then stop for a human decision. The current implementation supports the Switch agent protocol and automated handoff tests; the real Switch room, all five live connections and configured-model run must be demonstrated in the final video before claiming live verification.
+
+### What did you like about Switch, and what would you improve?
+
+Switch makes agents participants in the team's existing collaboration space instead of isolated chat windows. The shared room gives the workflow a visible handoff trail, and the provider-agnostic agent protocol makes it practical to assign different responsibilities to different agent runtimes. The part that matters most to MergeMind is that the collaboration layer is real: agents can be addressed as teammates and share room context. The setup experience could be improved with a shorter contributor quickstart, clearer visibility into agent connection and message-delivery state, and more guided troubleshooting when an agent has not joined a room or cannot accept a handoff. Better end-to-end test fixtures for real provider CLIs and messaging platforms would also make new integrations easier to validate.
+
+## Final owner checklist
+
+- [ ] Review the final public deployment and verify it in a signed-out browser.
+- [ ] Connect and verify all five agents in one real Switch room.
+- [ ] Run a real model-backed workflow and capture the handoffs.
+- [ ] Record and publish the demo video (under three minutes).
+- [ ] Publish the blog article and add its public URL.
+- [ ] Publish the #HowISwitch post and add its public URL.
+- [ ] Add only real upstream PR URLs.
+- [ ] Review every field and explicitly approve the hackathon submission.

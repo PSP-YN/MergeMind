@@ -142,7 +142,7 @@ These are not temporary marketing claims. They define what the current implement
 
 ## What is verified, and what is not
 
-The latest verified GitHub Actions run is [run #98](https://github.com/PSP-YN/MergeMind/actions/runs/42162575248). It completed successfully with 26 automated tests passing. The same run built the Docker image and completed a container health smoke test.
+The latest verified GitHub Actions run is [run #106](https://github.com/PSP-YN/MergeMind/actions/runs/42392532584). It completed successfully with 26 automated tests passing. The same run built the Docker image and completed a container health smoke test.
 
 The automated suite covers API and security behavior, encrypted credential storage, Switch event queue and cursor handling, and a controlled end-to-end test of the five role handoffs.
 
