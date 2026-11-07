@@ -5,7 +5,7 @@
 **A Switch-powered AI software engineering team.** MergeMind turns an engineering task into a coordinated workflow across five specialist agents: Coordinator, Planner, Researcher, Implementer, and Reviewer. They communicate through a shared Switch room.
 
 > Flip the Switch Hackathon · Best Business Workflow · 2026  
-> **Current local verification:** Switch core, Gateway, MergeMind, and Ollama were started. All five MergeMind agents were registered and added to one room; their WebSocket sessions initially connected, then detached on heartbeat timeout. The first workflow remained at `created`, so the full five-role handoff is not yet verified. A coordinator-intake correction has since been merged and passed CI run [#115](https://github.com/PSP-YN/MergeMind/actions/runs/42397507575), but it still needs a fresh live Switch run.
+> **Current local verification:** The local Switch core, Gateway, MergeMind backend, and Ollama are running. All five agents are registered, added to the private room, and currently connected (5/5). A fresh live workflow passed Coordinator, Planner, and Researcher; the Implementer rejected the local model response because it was not a valid unified diff. No repository files were changed. The independent Reviewer stage remains unverified. Coordinator-intake correction passed CI run [#115](https://github.com/PSP-YN/MergeMind/actions/runs/42397507575) and was exercised in this live run.
 
 ## What makes it a Switch workflow
 
