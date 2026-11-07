@@ -60,7 +60,7 @@ FastAPI, SQLite, an OpenAI-compatible model endpoint (local Ollama by default), 
 
 ## Verification status
 
-The latest verified [GitHub Actions run #98](https://github.com/PSP-YN/MergeMind/actions/runs/42162575248) completed successfully: **26 automated tests passed**, the Docker image built, and the container health smoke test passed.
+The latest verified [GitHub Actions run #108](https://github.com/PSP-YN/MergeMind/actions/runs/42392812447) completed successfully: the Backend tests workflow passed on the submission-preparation pull request. Earlier verified CI also recorded **26 automated tests passed**, a successful Docker image build, and a container health smoke test. Treat the latest workflow result as CI evidence, not proof of a live Switch session.
 
 This is automated implementation evidence, not proof of a live Switch session. The live Switch room, five connected agents, and real model-response workflow still need to be exercised and recorded. Do not claim those steps are complete until they have been demonstrated.
 
