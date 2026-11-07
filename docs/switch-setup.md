@@ -44,7 +44,7 @@ MergeMind uses the current Switch agent protocol:
 
 SSE is deprecated in the current Switch documentation; MergeMind uses WebSocket.
 
-The client handles message events only when payload.addressed is true. It routes task handoffs through send_targeted_message and publishes the final review summary through post_message.
+The client handles message events only when `payload.addressed` is true. The dashboard/API request enters the Coordinator intake handler directly; the Coordinator then sends the first addressed handoff to the Planner through Switch. This avoids sending a message from the Coordinator agent to itself. All subsequent specialist handoffs, including the Reviewer's completion message back to the Coordinator, use Switch `send_targeted_message`; the Coordinator publishes the final review summary through `post_message`.
 
 ## Important room setup step
 
