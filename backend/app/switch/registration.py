@@ -80,18 +80,6 @@ async def register_mergemind_agents(base_url: str, registration_key: str, room_i
                         f"Could not register {role.name}. Existing agents are retained; correct the cause and retry. {detail}"
                     ) from exc
 
-            # Each agent must be allowed to receive handoffs from the owner's other agents.
-            try:
-                response = await client.post(
-                    f"{base_url}/agents/{saved['agent_id']}/ops/update_agent_detail",
-                    headers={"Authorization": f"Bearer {saved['api_key']}"},
-                    json={"agent_id": saved["agent_id"], "addressing": "owner_and_owner_agents"},
-                )
-                response.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise SwitchRegistrationError(
-                    f"Registered {role.name}, but could not set owner-and-owner-agents addressing. Retry registration to repair it."
-                ) from exc
 
     store.set_setting("switch_base_url", base_url)
     store.set_setting("switch_room_id", room_id.strip())
