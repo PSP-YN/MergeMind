@@ -5,7 +5,7 @@
 **A Switch-powered AI software engineering team.** MergeMind turns an engineering task into a coordinated workflow across five specialist agents: Coordinator, Planner, Researcher, Implementer, and Reviewer. They communicate through a shared Switch room.
 
 > Flip the Switch Hackathon · Best Business Workflow · 2026  
-> **Current state:** local Switch core, Gateway, and MergeMind services have been started; the five-agent connection and full live workflow must still pass the verification checklist before being claimed as complete.
+> **Current local verification (7 Nov 2026):** Switch core, Gateway, and MergeMind are running locally. All five MergeMind agents are registered, joined to one real Switch room, and report connected (5/5). A real workflow has been dispatched, but the downstream Planner → Researcher → Implementer → Reviewer handoffs and final human-review state have not yet been verified. This is not a completed end-to-end demo.
 
 ## What makes it a Switch workflow
 
@@ -143,7 +143,7 @@ This invokes `python -m pytest` from the repository root so the `backend` packag
 GitHub Actions runs the backend test suite on pushes and pull requests to main. The latest verified CI run passed 26 tests and successfully built and smoke-tested the Docker image. The suite includes API/security checks, Switch cursor/queue checks, and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
 See [run #108](https://github.com/PSP-YN/MergeMind/actions/runs/42392812447) for the latest passing CI run.
 
-A passing CI run verifies the automated unit/API tests only. It does not substitute for a live Switch room, real model responses, or an end-to-end demonstration. Those must be verified with the user's Switch server and configured model.
+A passing CI run verifies the automated unit/API tests only. The local session has verified five real Switch agent connections in one room, but the full multi-stage workflow, real model responses, and end-to-end demonstration remain pending verification.
 
 ## Hackathon preparation
 
@@ -163,7 +163,7 @@ A passing CI run verifies the automated unit/API tests only. It does not substit
 - [x] Dashboard and persistent workflow records
 - [x] Human review/approval gate
 - [x] Publication-ready Best Blog article
-- [ ] Live Switch integration verified in a real room
+- [x] Five registered MergeMind agents connected to one real Switch room (local verification)
 - [ ] Live multi-agent workflow and model responses verified
 - [ ] Full end-to-end demo and screenshots
 - [x] Disposable patch-application and Python syntax-check sandbox
