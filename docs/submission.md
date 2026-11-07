@@ -62,12 +62,12 @@ FastAPI, SQLite, an OpenAI-compatible model endpoint (local Ollama by default), 
 
 The latest verified [GitHub Actions run #108](https://github.com/PSP-YN/MergeMind/actions/runs/42392812447) completed successfully: the Backend tests workflow passed on the submission-preparation pull request. Earlier verified CI also recorded **26 automated tests passed**, a successful Docker image build, and a container health smoke test. Treat the latest workflow result as CI evidence, not proof of a live Switch session.
 
-This is automated implementation evidence, not proof of a live Switch session. The live Switch room, five connected agents, and real model-response workflow still need to be exercised and recorded. Do not claim those steps are complete until they have been demonstrated.
+A live local Switch room and five connected MergeMind agents (5/5) have now been verified. A workflow dispatch was accepted, but the workflow remained in `created` and the downstream Planner → Researcher → Implementer → Reviewer handoffs and model-backed result were not verified. Do not claim a completed five-agent workflow until those stages have been demonstrated and recorded.
 
 ## Demo evidence to capture before submission
 
-- All five agents registered and connected in one real Switch room.
-- A real task dispatched from the dashboard.
+- All five agents registered and connected in one real Switch room (5/5 local connection check completed).
+- A real task dispatched from the dashboard (dispatch accepted; downstream completion still pending).
 - Addressed handoffs visible in the live Switch room.
 - Repository-backed research, proposed diff, and independent review in the dashboard.
 - The human approval or rejection action and the resulting decision record.
