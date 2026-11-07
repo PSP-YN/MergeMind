@@ -26,6 +26,8 @@ Open http://127.0.0.1:8000 and paste MERGEMIND_ADMIN_TOKEN from your local .env 
 
 ## 4. Connect your Switch workspace
 
+For the combined local setup, prefer `bash scripts/start-demo.sh`; it starts Switch core, Gateway, MergeMind, and checks their health. Follow [the complete local demo guide](local-demo.md). To register the five agents without putting the key in shell history, use `bash scripts/register-switch.sh`.
+
 In Switch:
 1. Start or select the Switch server for the hackathon.
 2. Copy its agent bridge base URL. Confirm GET /health works; do not use the Gateway URL if it differs.
@@ -71,4 +73,4 @@ Do not deploy or submit until the owner has reviewed the final build, blog, demo
 
 The polished article is public in the repository at [docs/blog-entry.md](https://github.com/PSP-YN/MergeMind/blob/main/docs/blog-entry.md). It has not yet been published to an external blog platform. Choose the destination (for example, an existing WordPress site or the personal portfolio) and connect the publishing account before posting.
 
-The LinkedIn announcement should link to the final published article and describe only verified results. No external blog post or LinkedIn post has been published from this session yet.
+The LinkedIn announcement should link to the final published article and describe only verified results. No external blog post or LinkedIn post has been published from this session yet. The current local Switch services and private demo room are recorded in [local-demo.md](local-demo.md); the five-agent run must be verified before recording or publishing claims about the live integration.

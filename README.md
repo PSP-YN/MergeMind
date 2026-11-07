@@ -5,7 +5,7 @@
 **A Switch-powered AI software engineering team.** MergeMind turns an engineering task into a coordinated workflow across five specialist agents: Coordinator, Planner, Researcher, Implementer, and Reviewer. They communicate through a shared Switch room.
 
 > Flip the Switch Hackathon · Best Business Workflow · 2026  
-> **Current state:** core implementation and automated checks are in place; live Switch room and model validation remain.
+> **Current state:** local Switch core, Gateway, and MergeMind services have been started; the five-agent connection and full live workflow must still pass the verification checklist before being claimed as complete.
 
 ## What makes it a Switch workflow
 
@@ -77,6 +77,12 @@ Then run the app:
 
     bash scripts/run.sh
 
+For a combined local Switch + MergeMind demonstration, use the full-stack launcher instead (requires a Switch source checkout at `~/projects/hackathon/switch`, or set `SWITCH_DIR`):
+
+    bash scripts/start-demo.sh
+
+This starts Switch core on port 8000, the Gateway on port 5173, and MergeMind on port 8001. The port split is intentional: Switch owns the agent bridge port 8000. Stop the app processes with `bash scripts/stop-demo.sh`; Switch database volumes are retained.
+
 To run the automated test suite:
 
     bash scripts/test.sh
@@ -91,14 +97,14 @@ If using another OpenAI-compatible model endpoint, set MERGEMIND_LLM_BASE_URL, M
 
 ## Connect Switch
 
-1. Run a Switch server and create a registration key in its Gateway.
-2. Find the **agent bridge base URL**. It is not necessarily the Gateway URL.
-3. Create or choose a Switch room.
-4. In the MergeMind dashboard, enter the bridge URL, registration key, and room ID, then register the five agents.
-5. Invite all five MergeMind agents into the selected room in Switch. Each role must be a member before it can connect.
-6. Confirm all five agents show as connected, then submit a task from the dashboard.
+1. Start the combined stack with `bash scripts/start-demo.sh` (or run Switch separately).
+2. Sign in to the Switch Gateway and create a Registration Key. Do not use an agent API key.
+3. Create a private internal room. Switch requires at least one initial agent to create an internal-only room; use a temporary external bootstrap agent, then remove it after adding the five MergeMind agents.
+4. Run `bash scripts/register-switch.sh` and enter the bridge URL, room ID, and registration key when prompted. The key input is hidden and is not stored by the script.
+5. Add all five MergeMind agents to the selected room in Switch.
+6. Unlock MergeMind with `MERGEMIND_ADMIN_TOKEN` from the local `.env`, and verify 5/5 agents are connected before submitting a task.
 
-See [Switch setup](docs/switch-setup.md) for protocol and troubleshooting details.
+See [Local five-agent demo](docs/local-demo.md) for the full setup, room provisioning, demo flow, verification checklist, and troubleshooting. See [Switch setup](docs/switch-setup.md) for protocol details.
 
 ## API
 
@@ -124,6 +130,7 @@ All dashboard/API routes other than /health require the X-MergeMind-Admin-Token 
       main.py
     backend/tests/
     docs/
+    scripts/       # local setup, start/stop, tests, Switch registration
 
 ## Verification
 
@@ -134,7 +141,7 @@ Run the same test command used by the project helper script:
 This invokes `python -m pytest` from the repository root so the `backend` package is resolved consistently.
 
 GitHub Actions runs the backend test suite on pushes and pull requests to main. The latest verified CI run passed 26 tests and successfully built and smoke-tested the Docker image. The suite includes API/security checks, Switch cursor/queue checks, and a controlled end-to-end test of all five workflow handoffs. It does not replace a live Switch server test.
-See [run #98](https://github.com/PSP-YN/MergeMind/actions/runs/42162575248) for the 26-test pass, Docker image build, and container health smoke test.
+See [run #108](https://github.com/PSP-YN/MergeMind/actions/runs/42392812447) for the latest passing CI run.
 
 A passing CI run verifies the automated unit/API tests only. It does not substitute for a live Switch room, real model responses, or an end-to-end demonstration. Those must be verified with the user's Switch server and configured model.
 
@@ -145,6 +152,7 @@ A passing CI run verifies the automated unit/API tests only. It does not substit
 - [Best Blog article](docs/blog-entry.md)
 - [Production readiness review](docs/production-readiness.md)
 - [Remaining owner setup steps](docs/remaining-user-steps.md)
+- [Full local Switch + MergeMind demo setup](docs/local-demo.md)
 
 ## Hackathon deliverables
 
